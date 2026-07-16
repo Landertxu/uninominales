@@ -1,0 +1,21 @@
+PP: 127 128
+
+PSdeG: 118 119
+
+BNG: 13 14
+
+UPyD: 168
+
+EU: 44
+
+PP UPyD 0.6 PSdeG 0.3
+
+PSdeG EU 0.5 BNG 0.3 PP 0.1
+
+EU PSdeG 0.6 BNG 0.3
+
+BNG EU 0.4 PSdeG 0.4 PP 0.1
+
+UPyD PP 0.4 PSdeG 0.3 EU 0.2
+
+R EU 0.8 UPyD 0.1

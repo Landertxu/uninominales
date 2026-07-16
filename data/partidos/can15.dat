@@ -1,0 +1,25 @@
+PP: 5 69 92
+
+PSOE: 0 62
+
+C's: 2 12
+
+P's: 6 72
+
+IU: 4 13 18 50 57 66 70 74 84 87 89 91 97 102
+
+CC: 61
+
+PP C's 0.6 PSOE 0.3
+
+PSOE P's 0.5 C's 0.3 PP 0.1
+
+C's PP 0.5 PSOE 0.3 P's 0.1
+
+P's PSOE 0.6 C's 0.3
+
+IU P's 0.6 PSOE 0.2 C's 0.1
+
+CC PP 0.4 PSOE 0.3 P's 0.2
+
+R P's 0.6 C's 0.3

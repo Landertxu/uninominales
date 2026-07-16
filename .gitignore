@@ -1,0 +1,18 @@
+# Database files
+*.db
+*.db-journal
+
+# Output files
+output/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Large data files (keep source, ignore generated)
+data/mapas/molde/*.shp
+data/mapas/molde/*.dbf
+data/mapas/molde/*.shx
+
+# Backup folder
+uninominales_v3_backup/

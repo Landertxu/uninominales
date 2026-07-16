@@ -1,0 +1,29 @@
+PP: 5 69 92
+
+PSOE: 0 42 53 62
+
+C's: 2 12
+
+P's: 6 46 55 65 72
+
+ERC: 43 64 82
+
+DL: 45
+
+U: 41 54
+
+PP C's 0.6 PSOE 0.3
+
+PSOE P's 0.5 C's 0.3 PP 0.1
+
+C's PP 0.5 PSOE 0.3 P's 0.1
+
+P's PSOE 0.5 C's 0.2 ERC 0.2
+
+ERC DL 0.5 P's 0.3 PSOE 0.1
+
+DL ERC 0.5 PP 0.3 C's 0.1
+
+U DL 0.4 PP 0.3 C's 0.2
+
+R P's 0.4 ERC 0.3 C's 0.2
