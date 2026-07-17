@@ -44,31 +44,39 @@ def find_party_file(region_name, year):
     return None
 
 
-def get_votes_for_constituency(conn, year, inclusion_codes, exclusion_codes):
-    """Query vote totals for a constituency defined by INE code prefixes.
+def _load_year_data(conn, year):
+    """Load all vote data for a year into memory.
+
+    Returns dict mapping mesa -> {candidatura: votos}.
+    """
+    table = f"resultados{year}"
+    data = {}
+    for mesa, candidatura, votos in conn.execute(
+        f"SELECT mesa, candidatura, votos FROM {table}"
+    ):
+        if mesa not in data:
+            data[mesa] = {}
+        data[mesa][candidatura] = data[mesa].get(candidatura, 0) + votos
+    return data
+
+
+def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
+    """Compute vote totals for a constituency from preloaded data.
 
     Returns a dict mapping party -> total votes.
     """
-    table = f"resultados{year}"
     votes = collections.Counter()
 
-    for code in inclusion_codes:
-        rows = conn.execute(
-            f"SELECT candidatura, SUM(votos) FROM {table} "
-            f"WHERE mesa LIKE ? GROUP BY candidatura",
-            (code + "%",),
-        )
-        for candidatura, votos in rows:
-            votes[candidatura] += votos
+    for mesa, mesa_votes in year_data.items():
+        included = any(mesa.startswith(code) for code in inclusion_codes)
+        excluded = any(mesa.startswith(code) for code in exclusion_codes)
 
-    for code in exclusion_codes:
-        rows = conn.execute(
-            f"SELECT candidatura, SUM(votos) FROM {table} "
-            f"WHERE mesa LIKE ? GROUP BY candidatura",
-            (code + "%",),
-        )
-        for candidatura, votos in rows:
-            votes[candidatura] -= votos
+        if included and not excluded:
+            for candidatura, votos in mesa_votes.items():
+                votes[candidatura] += votos
+        elif excluded and not included:
+            for candidatura, votos in mesa_votes.items():
+                votes[candidatura] -= votos
 
     return dict(votes)
 
@@ -103,6 +111,9 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
         print(f"[ERROR] No data found in table {table}")
         return {}, {}, {}
     print(f"[INFO] Available provinces in DB: {sorted(available_provinces)}")
+
+    # Load all vote data for the year into memory (avoids ~7k SQL queries)
+    year_data = _load_year_data(conn, year)
 
     # Group province files by region (so each party file is loaded once)
     region_provinces = collections.defaultdict(list)  # region_name -> [province_code, ...]
@@ -178,7 +189,7 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
             if prov not in available_provinces:
                 continue
 
-            raw_votes = get_votes_for_constituency(conn, year, inclusions, exclusions)
+            raw_votes = get_votes_for_constituency(year_data, inclusions, exclusions)
 
             # Map numeric codes to party names
             party_votes = collections.Counter()
