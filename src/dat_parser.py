@@ -4,11 +4,11 @@ Parses type-10 DAT files (candidatura data per census section) from the
 Instituto Nacional de Estadistica (INE).
 
 DAT file format (fixed-width, 36 chars per line):
-  [0:5]   Process prefix (type + year + month)
-  [5:8]   Round/region constant (e.g., '100' for 2015 general election)
-  [8:11]  Province code (2 digits, zero-padded to 3)
-  [11:21] Census section code (CUSEC): municipality(3) + district(2) + section(3)
-          Full CUSEC = province(2) + municipality(3) + district(2) + section(3) = 10 chars
+  [0:2]   Process type (e.g. '02' for general elections)
+  [2:6]   Election year (e.g. '2015')
+  [6:8]   Election month
+  [8:11]  Round/region constant (e.g. '100')
+  [11:21] CUSEC: province(2) + municipality(3) + district(2) + section(3)
   [21]    Space
   [22]    Candidatura letter code (data category, not used for party ID)
   [23:29] Numeric candidatura code (6 digits, maps to party via party files)
