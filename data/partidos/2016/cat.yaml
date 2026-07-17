@@ -1,0 +1,16 @@
+parties:
+  C's: [13, 14, 15]
+  CDC: [10]
+  ERC: [25]
+  P's: [22, 59]
+  PP: [68, 69]
+  PSOE: [74, 77]
+
+transfers:
+  C's: {P's: 0.1, PP: 0.5, PSOE: 0.3}
+  CDC: {C's: 0.1, ERC: 0.5, PP: 0.3}
+  ERC: {CDC: 0.5, P's: 0.3, PSOE: 0.1}
+  P's: {C's: 0.2, ERC: 0.2, PSOE: 0.5}
+  PP: {C's: 0.6, PSOE: 0.3}
+  PSOE: {C's: 0.3, P's: 0.5, PP: 0.1}
+  R: {C's: 0.2, ERC: 0.3, P's: 0.4}

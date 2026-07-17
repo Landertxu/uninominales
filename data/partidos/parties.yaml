@@ -33,6 +33,34 @@ DL:
   name: "Democràcia i Llibertat"
   color: "#6B3FA0"
 
+CDC:
+  name: "Convergència Democràtica de Catalunya"
+  color: "#1A5276"
+
+ECP:
+  name: "En Comú Podem"
+  color: "#B2182B"
+
+ERC-CatSí:
+  name: "Esquerra Republicana/Catalunya Sí"
+  color: "#F4B400"
+
+CCa-PNC:
+  name: "Coalición Canaria-Partido Nacionalista Canario"
+  color: "#00A0E3"
+
+VOX:
+  name: "Vox"
+  color: "#63BE21"
+
+PACMA:
+  name: "Partido Animalista Contra el Maltrato Animal"
+  color: "#09F087"
+
+RecortesCero:
+  name: "Recortes Cero-Grupo Verde"
+  color: "#2ECC71"
+
 CiU:
   name: "Convergència i Unió"
   color: "#1A5276"

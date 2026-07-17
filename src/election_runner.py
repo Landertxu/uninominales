@@ -18,6 +18,7 @@ YEARS = {
     2008: "data/raw/2008/10020803.DAT",
     2011: "data/raw/2011/10021111.DAT",
     2015: "data/raw/2015/10021215.DAT",
+    2016: "data/raw/2016/10021606.DAT",
 }
 
 
@@ -198,9 +199,20 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
 
             # Map numeric codes to party names
             party_votes = collections.Counter()
+            unmapped_votes = collections.Counter()
             for candidatura, votos in raw_votes.items():
                 party = codes.get(candidatura, "R")
                 party_votes[party] += votos
+                if party == "R":
+                    unmapped_votes[candidatura] += votos
+
+            total_votes = sum(party_votes.values())
+            r_votes = party_votes.get("R", 0)
+            if total_votes > 0 and r_votes / total_votes > 0.05:
+                top_unmapped = unmapped_votes.most_common(3)
+                codes_str = ", ".join(f"{c:06d}={v:,}" for c, v in top_unmapped)
+                print(f"  [WARN] {name}: R={r_votes:,} ({r_votes/total_votes:.0%}) "
+                      f"of {total_votes:,} total | top codes: {codes_str}")
 
             if not party_votes:
                 all_winners[name] = "R"
