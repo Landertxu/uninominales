@@ -2,15 +2,14 @@
 """Election simulator orchestrator.
 
 Runs the complete workflow:
-1. Load INE data into SQLite database
-2. Run FPTP simulation for a given year
+1. Parse INE DAT file for the election year
+2. Run FPTP simulation
 3. Generate output shapefile
 4. Render the election map
 
 Usage:
     python run.py                    # Full workflow for 2015
     python run.py --year 2015        # Specify year
-    python run.py --skip-load        # Skip data loading (use existing DB)
     python run.py --skip-map         # Skip map generation
     python run.py --no-map           # Don't generate shapefile
     python run.py --viz-only         # Just render the map from existing shapefile
@@ -18,14 +17,11 @@ Usage:
 
 import argparse
 import os
-import sqlite3
 
-from src.db_loader import load_all_data
 from src.election_runner import run_simulation
 from src.shapefile_gen import generate_shapefile
 from src.visualization import render_map
 
-DB_PATH = "elecciones.db"
 OUTPUT_DIR = "output"
 TEMPLATE_SHP = "data/mapas/molde/SECC_CPV_E_20111101_01_R_INE"
 
@@ -37,10 +33,6 @@ def main():
     parser.add_argument(
         "--year", type=int, default=2015, choices=[2008, 2011, 2015],
         help="Election year to simulate (default: 2015)"
-    )
-    parser.add_argument(
-        "--skip-load", action="store_true",
-        help="Skip data loading, use existing database"
     )
     parser.add_argument(
         "--skip-map", action="store_true",
@@ -82,41 +74,30 @@ def main():
         render_map(shp_path, img_path, width=args.width, height=args.height)
         return
 
-    # Step 1: Load data
-    if not args.skip_load:
-        print("=" * 60)
-        print("Step 1: Loading election data into database")
-        print("=" * 60)
-        conn = load_all_data(DB_PATH)
-    else:
-        print("Skipping data loading, using existing database")
-        conn = sqlite3.connect(DB_PATH)
-
-    # Step 2: Run simulation
-    print("\n" + "=" * 60)
-    print(f"Step 2: Running {args.method} simulation for {args.year}")
+    # Step 1: Run simulation
     print("=" * 60)
-    winners, valid, invalid = run_simulation(conn, args.year, method=args.method)
-    conn.close()
+    print(f"Step 1: Running {args.method} simulation for {args.year}")
+    print("=" * 60)
+    winners, valid, invalid = run_simulation(args.year, method=args.method)
 
     if not winners:
         print("No results to process")
         return
 
-    # Step 3: Generate shapefile
+    # Step 2: Generate shapefile
     if not args.no_map:
         print("\n" + "=" * 60)
-        print("Step 3: Generating output shapefile")
+        print("Step 2: Generating output shapefile")
         print("=" * 60)
         os.makedirs(OUTPUT_DIR, exist_ok=True)
         output_path = os.path.join(OUTPUT_DIR, f"mapa{args.year}")
         generate_shapefile(TEMPLATE_SHP, output_path, winners, valid, invalid)
         print(f"Shapefile saved to {output_path}.shp")
 
-        # Step 4: Render map
+        # Step 3: Render map
         if not args.skip_map:
             print("\n" + "=" * 60)
-            print("Step 4: Rendering election map")
+            print("Step 3: Rendering election map")
             print("=" * 60)
             img_path = os.path.join(OUTPUT_DIR, f"mapa{args.year}.png")
             render_map(

@@ -12,7 +12,7 @@ source env/bin/activate
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run complete workflow (load data + simulate + generate map)
+# 3. Run complete workflow (parse data + simulate + generate map)
 python3 run.py
 
 # Or specify a year
@@ -22,9 +22,6 @@ python3 run.py --year 2015
 ## Workflow Options
 
 ```bash
-# Skip data loading (use existing database)
-python3 run.py --skip-load
-
 # Skip map rendering (generate shapefile only)
 python3 run.py --skip-map
 
@@ -53,7 +50,6 @@ uninominales_v3/
 │   ├── party_parser.py       # Party transfer file parser (YAML)
 │   ├── constituency_parser.py # Constituency definition parser
 │   ├── simulation.py         # FPTP vote transfer simulation
-│   ├── db_loader.py          # SQLite database loader
 │   ├── election_runner.py    # Simulation orchestrator
 │   ├── shapefile_gen.py      # Shapefile generator
 │   └── visualization/        # Map renderer (package)
@@ -70,23 +66,23 @@ uninominales_v3/
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008
 │   │   ├── 2011/             # Per-region files for 2011
-│   │   └── 2015/             # Per-region files for 2015
+│   │   ── 2015/             # Per-region files for 2015
 │   ├── regions.dat           # Province-code -> region-name mapping
 │   └── mapas/molde/          # Template census-section shapefile
-── output/                   # Generated outputs
+├── output/                   # Generated outputs
 ├── requirements.txt          # Python dependencies
 └── README.md
 ```
 
 ## How It Works
 
-1. **Data Loading** (`src/dat_parser.py` + `src/db_loader.py`)
+1. **Data Parsing** (`src/dat_parser.py`)
    - Parses INE fixed-width DAT files (candidatura data per census section)
-   - Stores aggregated vote counts in `elecciones.db` (SQLite)
+   - Aggregates votes by census section and party
 
 2. **Simulation** (`src/simulation.py` + `src/election_runner.py`)
    - For each constituency defined in `circXX.dat`:
-     - Queries the database for all party votes within that district
+     - Queries the preloaded data for all party votes within that district
      - Applies transfer rules: eliminated parties' votes flow to other parties
      - The party with the most votes after transfers wins the seat
    - The special party `R` (resto) collects votes of minor/unknown candidaturas

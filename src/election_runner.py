@@ -6,7 +6,19 @@ and generating the output shapefile.
 
 import collections
 import os
-import sqlite3
+
+from .dat_parser import parse_dat_file
+from .party_parser import read_party_file
+from .constituency_parser import parse_constituency_file
+from .simulation import simulate_winner, simulate_plurality
+
+
+# Election years and their raw data file paths (relative to project root)
+YEARS = {
+    2008: "data/raw/2008/10020803.DAT",
+    2011: "data/raw/2011/10021111.DAT",
+    2015: "data/raw/2015/10021215.DAT",
+}
 
 
 def load_region_map(regions_path="data/regions.dat"):
@@ -44,19 +56,19 @@ def find_party_file(region_name, year):
     return None
 
 
-def _load_year_data(conn, year):
-    """Load all vote data for a year into memory.
+def load_year_data(year):
+    """Load all vote data for a year into memory from the raw DAT file.
 
     Returns dict mapping mesa -> {candidatura: votos}.
     """
-    table = f"resultados{year}"
+    path = YEARS.get(year)
+    if not path or not os.path.exists(path):
+        return {}
     data = {}
-    for mesa, candidatura, votos in conn.execute(
-        f"SELECT mesa, candidatura, votos FROM {table}"
-    ):
+    for mesa, candidatura, votos in parse_dat_file(path):
         if mesa not in data:
             data[mesa] = {}
-        data[mesa][candidatura] = data[mesa].get(candidatura, 0) + votos
+        data[mesa][int(candidatura)] = data[mesa].get(int(candidatura), 0) + votos
     return data
 
 
@@ -81,11 +93,10 @@ def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
     return dict(votes)
 
 
-def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transfer"):
+def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
     """Run the FPTP simulation for a given year.
 
     Args:
-        conn: SQLite database connection
         year: Election year
         circ_dir: Directory containing province constituency definitions (flat)
         method: Simulation method - 'transfer' (two-round with vote transfer) or
@@ -96,24 +107,18 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
     - valid: dict mapping province_code -> {constituency_name -> (inclusion_codes)}
     - invalid: dict mapping province_code -> {constituency_name -> (exclusion_codes)}
     """
-    from .party_parser import read_party_file
-    from .constituency_parser import parse_constituency_file
-    from .simulation import simulate_winner, simulate_plurality
-
     # Load province -> region mapping
     region_map = load_region_map()
 
-    # Get available provinces from database
-    table = f"resultados{year}"
-    rows = conn.execute(f"SELECT DISTINCT SUBSTR(mesa, 1, 2) FROM {table}").fetchall()
-    available_provinces = set(r[0] for r in rows)
-    if not available_provinces:
-        print(f"[ERROR] No data found in table {table}")
+    # Load vote data for the year from raw DAT file
+    year_data = load_year_data(year)
+    if not year_data:
+        print(f"[ERROR] No data found for year {year}")
         return {}, {}, {}
-    print(f"[INFO] Available provinces in DB: {sorted(available_provinces)}")
 
-    # Load all vote data for the year into memory (avoids ~7k SQL queries)
-    year_data = _load_year_data(conn, year)
+    # Get available provinces from loaded data
+    available_provinces = set(mesa[:2] for mesa in year_data)
+    print(f"[INFO] Available provinces: {sorted(available_provinces)}")
 
     # Group province files by region (so each party file is loaded once)
     region_provinces = collections.defaultdict(list)  # region_name -> [province_code, ...]
