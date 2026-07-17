@@ -9,16 +9,35 @@ import os
 import sqlite3
 
 
-def find_party_file(region_path, year):
+def load_region_map(regions_path="data/regions.dat"):
+    """Load the province-to-region mapping.
+
+    Returns dict mapping province_code (str) -> region_name (str).
+    """
+    mapping = {}
+    with open(regions_path) as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = line.split()
+            if len(parts) >= 2:
+                mapping[parts[0]] = parts[1]
+    return mapping
+
+
+def find_party_file(region_name, year):
     """Find the party file for a region and year.
 
-    Checks region-specific files first, then falls back to Spain-wide files.
+    Looks in data/partidos/{region}{year}.dat
+    Falls back to esp{year}.dat if not found.
     """
+    partidos_dir = os.path.join("data", "partidos")
     candidates = [
-        os.path.join(region_path, f"partidos{year % 100:02d}.dat"),
-        os.path.join(region_path, f"partidos{year}.dat"),
-        os.path.join("data", "partidos", f"esp{year % 100:02d}.dat"),
-        os.path.join("data", "partidos", f"esp{year}.dat"),
+        os.path.join(partidos_dir, f"{region_name}{year % 100:02d}.dat"),
+        os.path.join(partidos_dir, f"{region_name}{year}.dat"),
+        os.path.join(partidos_dir, f"esp{year % 100:02d}.dat"),
+        os.path.join(partidos_dir, f"esp{year}.dat"),
     ]
     for candidate in candidates:
         if os.path.exists(candidate):
@@ -61,7 +80,7 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
     Args:
         conn: SQLite database connection
         year: Election year
-        circ_dir: Directory containing constituency definitions
+        circ_dir: Directory containing province constituency definitions (flat)
         method: Simulation method - 'transfer' (two-round with vote transfer) or
                 'plurality' (simple FPTP, no transfers)
 
@@ -74,6 +93,9 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
     from .constituency_parser import parse_constituency_file
     from .simulation import simulate_winner, simulate_plurality
 
+    # Load province -> region mapping
+    region_map = load_region_map()
+
     # Get available provinces from database
     table = f"resultados{year}"
     rows = conn.execute(f"SELECT DISTINCT SUBSTR(mesa, 1, 2) FROM {table}").fetchall()
@@ -83,25 +105,38 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
         return {}, {}, {}
     print(f"[INFO] Available provinces in DB: {sorted(available_provinces)}")
 
-    # Process all regions
-    regions = sorted([
-        d for d in os.listdir(circ_dir)
-        if os.path.isdir(os.path.join(circ_dir, d)) and not d.startswith(".")
-    ])
+    # Group province files by region (so each party file is loaded once)
+    region_provinces = collections.defaultdict(list)  # region_name -> [province_code, ...]
+    province_files = {}  # province_code -> filepath
+
+    for filename in sorted(os.listdir(circ_dir)):
+        if not filename.startswith("circ") or not filename.endswith(".dat"):
+            continue
+        if filename.startswith("partidos"):
+            continue
+
+        ncirc = filename.replace("circ", "").replace(".dat", "")
+        province_code = ncirc[:2] if len(ncirc) >= 2 else ""
+        if not province_code:
+            continue
+
+        filepath = os.path.join(circ_dir, filename)
+        province_files[province_code] = filepath
+
+        region_name = region_map.get(province_code, "esp")
+        region_provinces[region_name].append(province_code)
 
     all_winners = {}
     all_valid = {}
     all_invalid = {}
     representatives = collections.Counter()
 
-    for region_name in regions:
-        region_path = os.path.join(circ_dir, region_name)
-        if not os.path.isdir(region_path):
-            print(f"[SKIP] {region_path} not found")
-            continue
+    # Process each region (grouped by party file)
+    for region_name in sorted(region_provinces.keys()):
+        provinces = region_provinces[region_name]
 
         # Find party file
-        party_file = find_party_file(region_path, year)
+        party_file = find_party_file(region_name, year)
         if party_file is None:
             print(f"[SKIP] No party file found for {region_name} year {year}")
             continue
@@ -113,15 +148,8 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transf
         region_invalid = {}
         constituencies = []
 
-        for filename in sorted(os.listdir(region_path)):
-            if filename.startswith("partidos") or filename.startswith("."):
-                continue
-            if not filename.endswith(".dat"):
-                continue
-
-            ncirc = filename.replace("circ", "").replace(".dat", "")
-            province_code = ncirc[:2] if len(ncirc) >= 2 else ""
-            filepath = os.path.join(region_path, filename)
+        for province_code in sorted(provinces):
+            filepath = province_files[province_code]
             file_constituencies = parse_constituency_file(filepath)
 
             if province_code not in region_valid:
