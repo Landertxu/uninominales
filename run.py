@@ -31,8 +31,10 @@ def main():
         description="Election simulator - FPTP system"
     )
     parser.add_argument(
-        "--year", type=int, default=2015, choices=[2008, 2011, 2015, 2016],
-        help="Election year to simulate (default: 2015)"
+        "--year", type=str, default="2015",
+        help="Election to simulate (default: 2015). "
+             "Single-election years: 2008, 2011, 2015, 2016. "
+             "Multi-election years: 2019a (April), 2019b (November)"
     )
     parser.add_argument(
         "--skip-map", action="store_true",

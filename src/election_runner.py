@@ -15,10 +15,11 @@ from .simulation import simulate_winner, simulate_plurality
 
 # Election years and their raw data file paths (relative to project root)
 YEARS = {
-    2008: "data/raw/2008/10020803.DAT",
-    2011: "data/raw/2011/10021111.DAT",
-    2015: "data/raw/2015/10021215.DAT",
-    2016: "data/raw/2016/10021606.DAT",
+    "2008": "data/raw/2008/10020803.DAT",
+    "2011": "data/raw/2011/10021111.DAT",
+    "2015": "data/raw/2015/10021215.DAT",
+    "2016": "data/raw/2016/10021606.DAT",
+    "2019a": "data/raw/2019a/10021904.DAT",
 }
 
 

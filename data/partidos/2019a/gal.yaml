@@ -1,0 +1,16 @@
+parties:
+  BNG: [12]
+  C's: [22, 23]
+  PP: [83, 84, 85, 86]
+  PSOE: [93, 96, 97]
+  UP: [36, 81, 82]
+  VOX: [117]
+
+transfers:
+  BNG: {UP: 0.5, PSOE: 0.3, PP: 0.1}
+  C's: {PP: 0.5, PSOE: 0.3, UP: 0.1}
+  PP: {C's: 0.6, PSOE: 0.3}
+  PSOE: {UP: 0.4, BNG: 0.3, C's: 0.2}
+  UP: {BNG: 0.3, PSOE: 0.4, C's: 0.2}
+  VOX: {PP: 0.7, C's: 0.2}
+  R: {C's: 0.3, PP: 0.3, PSOE: 0.3}

@@ -1,0 +1,16 @@
+parties:
+  C's: [22, 23]
+  COMP: [20]
+  PP: [83, 84, 85, 86]
+  PSOE: [96, 97]
+  UP: [74, 75, 77, 81]
+  VOX: [117]
+
+transfers:
+  C's: {PP: 0.5, COMP: 0.2, PSOE: 0.2}
+  COMP: {UP: 0.4, PSOE: 0.4, C's: 0.1}
+  PP: {C's: 0.6, COMP: 0.1, PSOE: 0.2}
+  PSOE: {COMP: 0.3, UP: 0.4, C's: 0.2}
+  UP: {COMP: 0.4, PSOE: 0.4, C's: 0.1}
+  VOX: {PP: 0.7, C's: 0.2}
+  R: {C's: 0.3, PP: 0.3, PSOE: 0.3}
