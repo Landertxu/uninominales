@@ -41,6 +41,10 @@ def simulate_winner(votes, transfers):
     """
     votes = dict(votes)
 
+    real_parties = {p: v for p, v in votes.items() if p != RESTO_PARTY}
+    if not real_parties:
+        return RESTO_PARTY
+
     # Build the set of parties that cannot be eliminated
     second = set()
     best = max(v for p, v in votes.items() if p != RESTO_PARTY)
@@ -64,10 +68,9 @@ def simulate_winner(votes, transfers):
                         if np in votes:
                             votes[np] += old * ptr
                             changed = True
-                elif p != 0:
-                    if RESTO_PARTY in votes:
-                        votes[RESTO_PARTY] += old
-                        changed = True
+                elif RESTO_PARTY in votes:
+                    votes[RESTO_PARTY] += old
+                    changed = True
         if not changed:
             break
 

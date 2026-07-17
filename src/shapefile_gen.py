@@ -4,6 +4,10 @@ Reads the template census-section shapefile and produces an output shapefile
 with constituency (CIRC) and winning party (PARTIDO) columns.
 """
 
+import os
+import shutil
+import warnings
+
 import shapefile
 
 
@@ -24,7 +28,10 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
     w.field("PARTIDO", "C", "40")
 
     i = 0
-    for shp, rec in zip(sf.iterShapes(), sf.records()):
+    unmatched = 0
+    shapes = sf.shapes()
+    records = sf.records()
+    for shp, rec in zip(shapes, records):
         code = rec[1]  # INE section code
         codpr = code[:2]  # Province code
 
@@ -38,6 +45,8 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
                     if not any(code.startswith(e) for e in exc_tup):
                         circ = ncirc
                         break
+            else:
+                unmatched += 1
 
         w.shape(shp)
         rec.append(circ)
@@ -45,3 +54,16 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
         w.record(*rec)
 
     w.close()
+
+    if unmatched:
+        warnings.warn(
+            f"{unmatched} census sections in covered provinces "
+            f"matched no constituency",
+            stacklevel=2,
+        )
+
+    # Copy .prj so the output shapefile has a valid CRS
+    prj_src = template_path + ".prj"
+    prj_dst = output_path + ".prj"
+    if os.path.isfile(prj_src) and not os.path.isfile(prj_dst):
+        shutil.copy2(prj_src, prj_dst)
