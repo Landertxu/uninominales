@@ -7,9 +7,9 @@ parties:
   VOX: [117]
 
 transfers:
-  C's: {PP: 0.5, ELPI: 0.2, PSOE: 0.2}
+  C's: {PP: 0.4, ELPI: 0.2, PSOE: 0.2, VOX: 0.1}
   ELPI: {C's: 0.3, PP: 0.2, PSOE: 0.3}
-  PP: {C's: 0.5, ELPI: 0.2, PSOE: 0.2}
+  PP: {C's: 0.3, ELPI: 0.2, VOX: 0.3, PSOE: 0.1}
   PSOE: {ELPI: 0.3, UP: 0.4, C's: 0.2}
   UP: {ELPI: 0.3, PSOE: 0.4, C's: 0.2}
   VOX: {PP: 0.7, C's: 0.2}

@@ -1,15 +1,17 @@
 parties:
-  C's: [22, 23]
-  ECP: [32]
-  ERC: [37]
-  JxCAT: [49]
+  C's: [18, 19]
+  CUP: [20]
+  ECP: [28]
+  ERC: [31]
+  JxCAT: [41]
   PP: [83, 84, 85, 86]
-  PSOE: [92, 96, 97]
-  UP: [74, 75, 76, 77, 78, 79, 80, 81, 82]
-  VOX: [117]
+  PSOE: [90, 94]
+  UP: [74, 75, 78, 81]
+  VOX: [116]
 
 transfers:
   C's: {PP: 0.3, ERC: 0.2, ECP: 0.2, PSOE: 0.1, VOX: 0.1}
+  CUP: {ERC: 0.5, ECP: 0.3, PSOE: 0.1}
   ECP: {ERC: 0.3, PSOE: 0.4, UP: 0.2}
   ERC: {ECP: 0.4, JxCAT: 0.3, PSOE: 0.1}
   JxCAT: {ERC: 0.5, C's: 0.2, PP: 0.2}

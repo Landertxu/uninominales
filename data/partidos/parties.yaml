@@ -185,6 +185,26 @@ GBAI:
   name: "Geroa Bai"
   color: "#1ABC9C"
 
+MP:
+  name: "Más País"
+  color: "#6C3483"
+
+CUP:
+  name: "Candidatura d'Unitat Popular"
+  color: "#FFD700"
+
+TE:
+  name: "Teruel Existe"
+  color: "#E67E22"
+
+UPL:
+  name: "Unión del Pueblo Leonés"
+  color: "#48C9B0"
+
+CpM:
+  name: "Coalición por Melilla"
+  color: "#5DADE2"
+
 R:
   name: "Resto"
   color: "#B4B4B4"
