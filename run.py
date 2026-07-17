@@ -62,6 +62,11 @@ def main():
         "--height", type=int, default=900,
         help="Map image height (default: 900)"
     )
+    parser.add_argument(
+        "--method", choices=["transfer", "plurality"], default="transfer",
+        help="Simulation method: 'transfer' (two-round with vote transfer) or "
+             "'plurality' (simple FPTP, no transfers). Default: transfer"
+    )
     args = parser.parse_args()
 
     # Change to script directory
@@ -89,9 +94,9 @@ def main():
 
     # Step 2: Run simulation
     print("\n" + "=" * 60)
-    print(f"Step 2: Running FPTP simulation for {args.year}")
+    print(f"Step 2: Running {args.method} simulation for {args.year}")
     print("=" * 60)
-    winners, valid, invalid = run_simulation(conn, args.year)
+    winners, valid, invalid = run_simulation(conn, args.year, method=args.method)
     conn.close()
 
     if not winners:

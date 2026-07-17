@@ -55,8 +55,15 @@ def get_votes_for_constituency(conn, year, inclusion_codes, exclusion_codes):
     return dict(votes)
 
 
-def run_simulation(conn, year, circ_dir="data/circunscripciones"):
+def run_simulation(conn, year, circ_dir="data/circunscripciones", method="transfer"):
     """Run the FPTP simulation for a given year.
+
+    Args:
+        conn: SQLite database connection
+        year: Election year
+        circ_dir: Directory containing constituency definitions
+        method: Simulation method - 'transfer' (two-round with vote transfer) or
+                'plurality' (simple FPTP, no transfers)
 
     Returns (winners, valid, invalid) where:
     - winners: dict mapping constituency_name -> winning party
@@ -65,10 +72,7 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones"):
     """
     from .party_parser import read_party_file
     from .constituency_parser import parse_constituency_file
-    from .simulation import simulate_winner
-
-    # Import here to avoid circular imports
-    from .simulation import simulate_winner as sim_winner
+    from .simulation import simulate_winner, simulate_plurality
 
     # Get available provinces from database
     table = f"resultados{year}"
@@ -159,7 +163,10 @@ def run_simulation(conn, year, circ_dir="data/circunscripciones"):
                 all_winners[name] = "R"
                 continue
 
-            winner = sim_winner(dict(party_votes), transfers)
+            if method == "plurality":
+                winner = simulate_plurality(dict(party_votes))
+            else:
+                winner = simulate_winner(dict(party_votes), transfers)
             all_winners[name] = winner
             representatives[winner] += 1
             print(f"  {name}: {winner}")

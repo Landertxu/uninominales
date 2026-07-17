@@ -7,6 +7,24 @@ Implements the vote transfer simulation for first-past-the-post elections.
 RESTO_PARTY = "R"
 
 
+def simulate_plurality(votes):
+    """Determine the winner using simple plurality (no vote transfers).
+
+    Args:
+        votes: dict mapping party -> vote count
+
+    Returns:
+        The winning party name (not 'R').
+
+    In simple plurality, the party with the most votes wins directly.
+    'R' (resto/minor parties) is excluded from winning.
+    """
+    real_parties = {p: v for p, v in votes.items() if p != RESTO_PARTY}
+    if not real_parties:
+        return RESTO_PARTY
+    return max(real_parties, key=real_parties.get)
+
+
 def simulate_winner(votes, transfers):
     """Determine the winner using vote transfer simulation.
 
