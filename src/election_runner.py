@@ -29,15 +29,14 @@ def load_region_map(regions_path="data/regions.dat"):
 def find_party_file(region_name, year):
     """Find the party file for a region and year.
 
-    Looks in data/partidos/{region}{year}.dat
-    Falls back to esp{year}.dat if not found.
+    Looks in data/partidos/{year}/{region}.yaml
+    Falls back to data/partidos/{year}/esp.yaml if not found.
     """
     partidos_dir = os.path.join("data", "partidos")
+    year_dir = os.path.join(partidos_dir, str(year))
     candidates = [
-        os.path.join(partidos_dir, f"{region_name}{year % 100:02d}.dat"),
-        os.path.join(partidos_dir, f"{region_name}{year}.dat"),
-        os.path.join(partidos_dir, f"esp{year % 100:02d}.dat"),
-        os.path.join(partidos_dir, f"esp{year}.dat"),
+        os.path.join(year_dir, f"{region_name}.yaml"),
+        os.path.join(year_dir, "esp.yaml"),
     ]
     for candidate in candidates:
         if os.path.exists(candidate):

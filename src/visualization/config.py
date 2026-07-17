@@ -1,23 +1,31 @@
 """Party colors and map constants."""
 
-PARTY_COLORS = {
-    "PP": (0, 112, 192),
-    "PSOE": (228, 26, 28),
-    "C's": (255, 127, 0),
-    "P's": (178, 24, 43),
-    "IU": (51, 160, 44),
-    "ERC": (255, 204, 0),
-    "PNV": (0, 128, 128),
-    "DL": (106, 61, 154),
-    "UPyD": (255, 127, 14),
-    "BNG": (177, 89, 40),
-    "CC": (0, 160, 200),
-    "Compromis": (255, 210, 0),
-    "EH Bildu": (0, 153, 136),
-    "Nueva Canarias": (255, 195, 0),
-    "R": (180, 180, 180),
-    "0": (220, 220, 220),
-}
+import os
+import yaml
+
+
+def _hex_to_rgb(hex_color):
+    """Convert hex color string to RGB tuple."""
+    hex_color = hex_color.lstrip("#")
+    return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+
+def _load_party_colors():
+    """Load party colors from central YAML file."""
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "partidos", "parties.yaml")
+    try:
+        with open(path) as f:
+            data = yaml.safe_load(f)
+        colors = {}
+        for name, info in data.items():
+            hex_color = info.get("color", "#B4B4B4")
+            colors[name] = _hex_to_rgb(hex_color)
+        return colors
+    except FileNotFoundError:
+        return {}
+
+
+PARTY_COLORS = _load_party_colors()
 
 DEFAULT_COLOR = (200, 200, 200)
 BG_COLOR = (255, 255, 255)

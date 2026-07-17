@@ -1,0 +1,14 @@
+parties:
+  IU: [19, 77, 78, 79, 85, 86, 87, 88, 91, 92, 93, 94]
+  PA: [105, 106]
+  PP: [127, 128, 129, 130, 131]
+  PSOE: [136, 137]
+  UPyD: [168]
+
+transfers:
+  IU: {PA: 0.2, PSOE: 0.5, UPyD: 0.2}
+  PA: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  PP: {PA: 0.2, PSOE: 0.2, UPyD: 0.5}
+  PSOE: {IU: 0.5, PA: 0.2, PP: 0.1, UPyD: 0.1}
+  R: {IU: 0.7, PA: 0.1, UPyD: 0.1}
+  UPyD: {IU: 0.2, PP: 0.4, PSOE: 0.3}

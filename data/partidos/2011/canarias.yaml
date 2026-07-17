@@ -1,0 +1,14 @@
+parties:
+  CC: [24]
+  IU: [15, 72, 79, 88]
+  PP: [127, 128]
+  PSOE: [136, 137]
+  UPyD: [168]
+
+transfers:
+  CC: {IU: 0.2, PP: 0.3, PSOE: 0.4}
+  IU: {CC: 0.3, PSOE: 0.3, UPyD: 0.3}
+  PP: {CC: 0.3, PSOE: 0.3, UPyD: 0.3}
+  PSOE: {CC: 0.3, IU: 0.3, PP: 0.1, UPyD: 0.2}
+  R: {CC: 0.2, IU: 0.6, UPyD: 0.1}
+  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}

@@ -1,44 +1,62 @@
-"""Party transfer file parser.
+"""Party data parser.
 
-Reads party transfer files that map numeric candidatura codes to party names
-and define vote transfer rules for the FPTP simulation.
-
-File format:
-  - Lines starting with '#' are comments
-  - Party definition lines: 'PARTY_NAME: CODE1 CODE2 ...'
-  - Transfer lines: 'SOURCE_PARTY TARGET1 FRACTION1 TARGET2 FRACTION2 ...'
+Reads party configuration from YAML files:
+  - data/partidos/parties.yaml: Central party metadata (names, colors)
+  - data/partidos/{year}/{region}.yaml: Per-election party codes and transfers
 """
+
+import os
+import yaml
+
+
+_PARTIES_CACHE = None
+
+
+def load_parties_metadata(path="data/partidos/parties.yaml"):
+    """Load central party metadata (names and colors).
+
+    Returns dict mapping party_name -> {"name": str, "color": str}.
+    """
+    global _PARTIES_CACHE
+    if _PARTIES_CACHE is not None:
+        return _PARTIES_CACHE
+
+    with open(path) as f:
+        _PARTIES_CACHE = yaml.safe_load(f)
+    return _PARTIES_CACHE
+
+
+def get_party_color(party_name, path="data/partidos/parties.yaml"):
+    """Get the hex color for a party."""
+    meta = load_parties_metadata(path)
+    if party_name in meta:
+        return meta[party_name].get("color", "#B4B4B4")
+    return "#B4B4B4"
+
+
+def get_all_party_colors(path="data/partidos/parties.yaml"):
+    """Get all party colors as a dict mapping party_name -> hex_color."""
+    meta = load_parties_metadata(path)
+    return {name: info.get("color", "#B4B4B4") for name, info in meta.items()}
 
 
 def read_party_file(path):
-    """Read a party transfer file.
+    """Read a per-election party file.
 
     Returns (codes, transfers) where:
     - codes: dict mapping numeric candidatura code (int) -> party name (str)
     - transfers: dict mapping party name -> {target_party: fraction, ...}
     """
-    codes = {}
-    transfers = {}
-
     with open(path) as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#"):
-                continue
+        data = yaml.safe_load(f)
 
-            parts = line.split()
-            if parts[0].endswith(":"):
-                party = parts[0][:-1]
-                for code_str in parts[1:]:
-                    codes[int(code_str)] = party
-            else:
-                party_from = parts[0]
-                transfers[party_from] = {}
-                i = 1
-                while i + 1 < len(parts):
-                    target = parts[i]
-                    fraction = float(parts[i + 1])
-                    transfers[party_from][target] = fraction
-                    i += 2
+    codes = {}
+    for party, code_list in data.get("parties", {}).items():
+        for code in code_list:
+            codes[int(code)] = party
+
+    transfers = {}
+    for party_from, targets in data.get("transfers", {}).items():
+        transfers[party_from] = dict(targets) if targets else {}
 
     return codes, transfers

@@ -1,0 +1,18 @@
+parties:
+  EA: [83]
+  IU: [86, 119, 128, 129]
+  PNV: [84]
+  PP: [209, 210]
+  PSOE: [222, 223, 225, 226]
+  UPyD: [271]
+  ara: [21, 208]
+
+transfers:
+  EA: {IU: 0.1, PNV: 0.8}
+  IU: {PSOE: 0.6, UPyD: 0.3}
+  PNV: {IU: 0.1, PP: 0.4, PSOE: 0.4}
+  PP: {PNV: 0.3, PSOE: 0.3, UPyD: 0.3}
+  PSOE: {IU: 0.4, PNV: 0.2, PP: 0.1, UPyD: 0.2}
+  R: {IU: 0.6, PNV: 0.3}
+  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  ara: {IU: 0.2, PNV: 0.6, PSOE: 0.1}

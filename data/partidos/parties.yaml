@@ -1,0 +1,138 @@
+# Central party metadata
+# Each party has a display name and color for visualization
+
+PP:
+  name: "Partido Popular"
+  color: "#0066CC"
+
+PSOE:
+  name: "Partido Socialista Obrero Español"
+  color: "#E30613"
+
+C's:
+  name: "Ciudadanos"
+  color: "#FF7F00"
+
+P's:
+  name: "Podemos"
+  color: "#B2182B"
+
+IU:
+  name: "Izquierda Unida"
+  color: "#1B853E"
+
+ERC:
+  name: "Esquerra Republicana de Catalunya"
+  color: "#F4B400"
+
+PNV:
+  name: "Partido Nacionalista Vasco"
+  color: "#2D9C94"
+
+DL:
+  name: "Democràcia i Llibertat"
+  color: "#6B3FA0"
+
+CiU:
+  name: "Convergència i Unió"
+  color: "#1A5276"
+
+UPyD:
+  name: "Unión Progreso y Democracia"
+  color: "#FF7F0E"
+
+CC:
+  name: "Coalición Canaria"
+  color: "#00A0E3"
+
+BNG:
+  name: "Bloque Nacionalista Galego"
+  color: "#7D3C98"
+
+Comp:
+  name: "Compromís"
+  color: "#F1C40F"
+
+FAC:
+  name: "Foro Asturias"
+  color: "#1ABC9C"
+
+PRC:
+  name: "Partido Regionalista de Cantabria"
+  color: "#3498DB"
+
+CHA:
+  name: "Chunta Aragonesista"
+  color: "#E74C3C"
+
+PAR:
+  name: "Partido Aragonés"
+  color: "#C0392B"
+
+EHB:
+  name: "Euskal Herria Bildu"
+  color: "#16A085"
+
+GB:
+  name: "Geroa Bai"
+  color: "#1ABC9C"
+
+AMA:
+  name: "Askatasuna"
+  color: "#8E44AD"
+
+EA:
+  name: "Eusko Alkartasuna"
+  color: "#27AE60"
+
+EUPV:
+  name: "Esquerra Unida del País Valencià"
+  color: "#2ECC71"
+
+NC:
+  name: "Nueva Canarias"
+  color: "#F39C12"
+
+PA:
+  name: "Partido Andalucista"
+  color: "#0E6655"
+
+CA:
+  name: "Ciudadanos de Álava"
+  color: "#5DADE2"
+
+UPL:
+  name: "Unión del Pueblo Leonés"
+  color: "#48C9B0"
+
+NB:
+  name: "Nafarroa Bai"
+  color: "#5499C7"
+
+PSM:
+  name: "Partit Socialista de Mallorca"
+  color: "#D35400"
+
+MES:
+  name: "Més per Mallorca"
+  color: "#EB984E"
+
+NOS:
+  name: "Nós Candidatura Cidadá"
+  color: "#85929E"
+
+PxC:
+  name: "Plataforma per Catalunya"
+  color: "#943126"
+
+U:
+  name: "Unió"
+  color: "#2874A6"
+
+UxI:
+  name: "Unió i Illes"
+  color: "#117A65"
+
+R:
+  name: "Resto"
+  color: "#B4B4B4"
