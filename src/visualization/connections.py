@@ -2,6 +2,8 @@
 
 from collections import defaultdict
 
+from .core import get_bbox
+
 
 def find_polygon_groups(shapes, split_axis='y', threshold=None):
     """Find separate polygon groups within a constituency.
@@ -63,17 +65,11 @@ def find_polygon_groups(shapes, split_axis='y', threshold=None):
 
 
 def find_bounding_box(shapes, padding=0):
-    """Find the bounding box of all shapes."""
-    min_x = min_y = float('inf')
-    max_x = max_y = float('-inf')
-    
-    for shp in shapes:
-        for x, y in shp.points:
-            min_x = min(min_x, x)
-            max_x = max(max_x, x)
-            min_y = min(min_y, y)
-            max_y = max(max_y, y)
-    
+    """Find the bounding box of all shapes with optional padding."""
+    bbox = get_bbox(shapes)
+    if bbox is None:
+        return None
+    min_x, min_y, max_x, max_y = bbox
     return (min_x - padding, min_y - padding, max_x + padding, max_y + padding)
 
 
