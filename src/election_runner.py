@@ -165,8 +165,6 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
     for filename in sorted(os.listdir(circ_dir)):
         if not filename.startswith("circ") or not filename.endswith(".dat"):
             continue
-        if filename.startswith("partidos"):
-            continue
 
         ncirc = filename.replace("circ", "").replace(".dat", "")
         province_code = ncirc[:2] if len(ncirc) >= 2 else ""

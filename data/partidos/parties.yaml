@@ -197,9 +197,17 @@ TE:
   name: "Teruel Existe"
   color: "#E67E22"
 
-UPL:
-  name: "Unión del Pueblo Leonés"
-  color: "#48C9B0"
+ELPI:
+  name: "El Pi - Progrés de les Illes"
+  color: "#F39C12"
+
+COMP:
+  name: "Compromís"
+  color: "#F1C40F"
+
+ara:
+  name: "Aralar"
+  color: "#27AE60"
 
 CpM:
   name: "Coalición por Melilla"

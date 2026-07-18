@@ -1,11 +1,10 @@
 """Inset maps for cities (Madrid, Barcelona)."""
 
 from PIL import Image, ImageDraw
-from collections import defaultdict
 
 from .config import (PARTY_COLORS, DEFAULT_COLOR, BG_COLOR, BORDER_COLOR,
                      INSET_BORDER_COLOR, INSETS, CANARIAS_PROVS)
-from .core import get_bbox, assign_unique_colors
+from .core import get_bbox
 
 
 def make_inset_project(bb_xmin, bb_ymin, inset_scale, inset_offset_x,

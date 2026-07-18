@@ -8,7 +8,6 @@ Renders an election shapefile to a PNG image with:
 - Legend showing seat counts by party
 """
 
-from collections import defaultdict
 from PIL import Image, ImageFont
 import shapefile
 

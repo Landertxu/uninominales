@@ -5,7 +5,6 @@ Reads party configuration from YAML files:
   - data/partidos/{year}/{region}.yaml: Per-election party codes and transfers
 """
 
-import os
 import yaml
 
 
