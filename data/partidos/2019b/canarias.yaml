@@ -1,5 +1,5 @@
 parties:
-  CCa: [13, 54]
+  CCa: [13]
   C's: [18, 19]
   NCa: [54]
   PP: [83, 84, 85, 86]
@@ -10,6 +10,7 @@ parties:
 transfers:
   CCa: {PP: 0.3, C's: 0.2, PSOE: 0.2}
   C's: {PP: 0.4, CCa: 0.2, PSOE: 0.2, VOX: 0.1}
+  NCa: {PSOE: 0.4, UP: 0.3, C's: 0.1}
   PP: {C's: 0.3, CCa: 0.3, VOX: 0.2, PSOE: 0.1}
   PSOE: {UP: 0.4, C's: 0.2, PP: 0.2}
   UP: {PSOE: 0.5, C's: 0.2, PP: 0.2}

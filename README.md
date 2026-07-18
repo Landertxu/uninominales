@@ -124,6 +124,15 @@ uninominales_v3/
 | Candidatura | 23:29 | 6-digit numeric code (maps to party via party files) |
 | Votes | 29:36 | Vote count (7 digits, zero-padded) |
 
+## Differences from the original `uninominales` (Python 2 / MySQL)
+
+The original algorithm treated the synthetic party `R` (resto) as a regular party — it could be *protected* from elimination if it earned ≥20% of a district's votes, and could even win a seat. This version intentionally changes that behavior:
+
+- **R is always eliminated** and its votes redistributed via transfer rules
+- **R is excluded** from the final winner selection
+
+This change was made because R is an artificial catch-all for minor/unknown candidaturas and should never win. On historical data (2008–2016) the change never triggers. For 2019, it flips one seat: in **Navarra4** (April 2019), the original algorithm gives EHB the seat (R=21% was protected), while v3 gives it to PSOE after draining R's votes.
+
 ## Output
 
 Results are saved to `output/mapa{YEAR}.shp` with fields:
