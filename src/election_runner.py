@@ -156,7 +156,6 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
 
     # Get available provinces from loaded data
     available_provinces = set(mesa[:2] for mesa in year_data.raw)
-    print(f"[INFO] Available provinces: {sorted(available_provinces)}")
 
     # Group province files by region (so each party file is loaded once)
     region_provinces = collections.defaultdict(list)  # region_name -> [province_code, ...]
@@ -217,8 +216,6 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
 
         if not constituencies:
             continue
-
-        print(f"[INFO] Region {region_name}: party file = {party_file}")
 
         # Process constituencies
         for name, inclusions, exclusions in constituencies:

@@ -9,6 +9,9 @@ output/
 __pycache__/
 *.pyc
 
+# Virtual environment
+env/
+
 # Large data files (keep source, ignore generated)
 data/mapas/molde/*.shp
 data/mapas/molde/*.dbf
