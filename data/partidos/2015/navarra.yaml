@@ -5,8 +5,6 @@ parties:
   - 29
   GB:
   - 47
-  IU:
-  - 49
   P's:
   - 6
   PP:
@@ -25,11 +23,6 @@ transfers:
     EHB: 0.5
     P's: 0.3
     PSOE: 0.1
-  IU:
-    C's: 0.1
-    EHB: 0.2
-    P's: 0.4
-    PSOE: 0.2
   P's:
     C's: 0.2
     EHB: 0.2

@@ -1,14 +1,28 @@
 parties:
-  BNG: [13, 14]
-  IU: [44]
-  PP: [127, 128]
-  PSOE: [118, 119]
-  UPyD: [168]
-
+  BNG:
+  - 13
+  - 14
+  IU:
+  - 44
+  PP:
+  - 127
+  - 128
+  PSOE:
+  - 118
+  - 119
 transfers:
-  BNG: {IU: 0.4, PP: 0.1, PSOE: 0.4}
-  IU: {BNG: 0.3, PSOE: 0.6}
-  PP: {PSOE: 0.3, UPyD: 0.6}
-  PSOE: {BNG: 0.3, IU: 0.5, PP: 0.1}
-  R: {IU: 0.8, UPyD: 0.1}
-  UPyD: {IU: 0.2, PP: 0.4, PSOE: 0.3}
+  BNG:
+    IU: 0.4
+    PP: 0.1
+    PSOE: 0.4
+  IU:
+    BNG: 0.3
+    PSOE: 0.6
+  PP:
+    PSOE: 0.3
+  PSOE:
+    BNG: 0.3
+    IU: 0.5
+    PP: 0.1
+  R:
+    IU: 0.8

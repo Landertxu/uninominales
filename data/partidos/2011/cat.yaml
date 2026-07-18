@@ -13,10 +13,6 @@ parties:
   - 144
   PSOE:
   - 141
-  PxC:
-  - 149
-  UPyD:
-  - 168
 transfers:
   CiU:
     ERC: 0.3
@@ -29,24 +25,12 @@ transfers:
   IU:
     ERC: 0.3
     PSOE: 0.5
-    UPyD: 0.1
   PP:
     CiU: 0.3
     PSOE: 0.3
-    UPyD: 0.3
   PSOE:
     ERC: 0.2
     IU: 0.5
-    UPyD: 0.2
-  PxC:
-    CiU: 0.2
-    PP: 0.4
-    UPyD: 0.3
   R:
     ERC: 0.2
     IU: 0.6
-    UPyD: 0.1
-  UPyD:
-    IU: 0.2
-    PP: 0.4
-    PSOE: 0.3

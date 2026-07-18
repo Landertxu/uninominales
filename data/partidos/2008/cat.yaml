@@ -1,8 +1,4 @@
 parties:
-  C's:
-  - 44
-  - 45
-  - 46
   CiU:
   - 60
   - 61
@@ -20,11 +16,7 @@ parties:
   PSOE:
   - 238
   - 239
-  UPyD:
-  - 271
 transfers:
-  C's:
-    UPyD: 0.9
   CiU:
     ERC: 0.3
     PP: 0.4
@@ -36,20 +28,12 @@ transfers:
   IU:
     ERC: 0.3
     PSOE: 0.5
-    UPyD: 0.1
   PP:
     CiU: 0.3
     PSOE: 0.3
-    UPyD: 0.3
   PSOE:
     ERC: 0.2
     IU: 0.5
-    UPyD: 0.2
   R:
     ERC: 0.2
     IU: 0.6
-    UPyD: 0.1
-  UPyD:
-    IU: 0.2
-    PP: 0.4
-    PSOE: 0.3

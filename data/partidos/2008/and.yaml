@@ -1,6 +1,4 @@
 parties:
-  CA:
-  - 49
   IU:
   - 124
   - 126
@@ -12,31 +10,13 @@ parties:
   - 225
   - 226
   - 227
-  UPyD:
-  - 271
 transfers:
-  CA:
-    IU: 0.3
-    PP: 0.3
-    PSOE: 0.3
   IU:
-    CA: 0.2
     PSOE: 0.5
-    UPyD: 0.2
   PP:
-    CA: 0.2
     PSOE: 0.2
-    UPyD: 0.5
   PSOE:
-    CA: 0.2
     IU: 0.5
     PP: 0.1
-    UPyD: 0.1
   R:
-    CA: 0.1
     IU: 0.7
-    UPyD: 0.1
-  UPyD:
-    IU: 0.2
-    PP: 0.4
-    PSOE: 0.3

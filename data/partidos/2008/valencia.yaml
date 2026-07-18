@@ -1,14 +1,12 @@
 parties:
-  Comp: [25]
-  EUPV: [80, 81]
-  PP: [210, 211]
-  PSOE: [226]
-  UPyD: [271]
-
+  PP:
+  - 210
+  - 211
+  PSOE:
+  - 226
 transfers:
-  Comp: {EUPV: 0.7, PSOE: 0.2}
-  EUPV: {Comp: 0.2, PSOE: 0.5, UPyD: 0.2}
-  PP: {PSOE: 0.3, UPyD: 0.6}
-  PSOE: {Comp: 0.2, EUPV: 0.4, PP: 0.1, UPyD: 0.2}
-  R: {EUPV: 0.8, UPyD: 0.1}
-  UPyD: {EUPV: 0.3, PP: 0.3, PSOE: 0.3}
+  PP:
+    PSOE: 0.3
+  PSOE:
+    PP: 0.1
+  R: {}

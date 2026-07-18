@@ -3,9 +3,6 @@ parties:
   - 2
   EHB:
   - 29
-  IU:
-  - 18
-  - 100
   P's:
   - 33
   PNV:
@@ -24,11 +21,6 @@ transfers:
     P's: 0.4
     PNV: 0.4
     PSOE: 0.1
-  IU:
-    C's: 0.1
-    EHB: 0.2
-    P's: 0.4
-    PSOE: 0.2
   P's:
     C's: 0.2
     EHB: 0.2

@@ -1,6 +1,4 @@
 parties:
-  BNG:
-  - 5
   C's:
   - 13
   P's:
@@ -10,10 +8,6 @@ parties:
   PSOE:
   - 75
 transfers:
-  BNG:
-    P's: 0.6
-    PP: 0.1
-    PSOE: 0.2
   C's:
     P's: 0.1
     PP: 0.5

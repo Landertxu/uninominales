@@ -1,35 +1,18 @@
 parties:
-  IU:
-  - 122
   NB:
   - 152
   PP:
   - 268
   PSOE:
   - 226
-  UPyD:
-  - 271
 transfers:
-  IU:
-    NB: 0.3
-    PSOE: 0.4
-    UPyD: 0.2
   NB:
-    IU: 0.5
     PSOE: 0.4
   PP:
     NB: 0.2
     PSOE: 0.3
-    UPyD: 0.4
   PSOE:
-    IU: 0.4
     NB: 0.2
     PP: 0.1
-    UPyD: 0.2
   R:
-    IU: 0.6
     NB: 0.3
-  UPyD:
-    IU: 0.3
-    PP: 0.3
-    PSOE: 0.3

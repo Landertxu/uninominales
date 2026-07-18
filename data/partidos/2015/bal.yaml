@@ -1,8 +1,6 @@
 parties:
   C's:
   - 2
-  IU:
-  - 57
   MES:
   - 59
   P's:
@@ -16,10 +14,6 @@ transfers:
     P's: 0.1
     PP: 0.5
     PSOE: 0.3
-  IU:
-    C's: 0.1
-    P's: 0.6
-    PSOE: 0.2
   MES:
     P's: 0.6
     PP: 0.1
