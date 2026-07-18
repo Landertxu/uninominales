@@ -1,16 +1,47 @@
 parties:
-  AMA: [3]
-  IU: [70, 79, 88, 89, 90]
-  PNV: [53, 54]
-  PP: [127, 128]
-  PSOE: [135, 136, 137]
-  UPyD: [168]
-
+  AMA:
+  - 3
+  IU:
+  - 70
+  - 89
+  - 90
+  PNV:
+  - 53
+  - 54
+  PP:
+  - 127
+  - 128
+  PSOE:
+  - 135
+  UPyD:
+  - 168
 transfers:
-  AMA: {IU: 0.2, PNV: 0.6, PSOE: 0.1}
-  IU: {AMA: 0.2, PSOE: 0.4, UPyD: 0.3}
-  PNV: {AMA: 0.5, PP: 0.2, PSOE: 0.2}
-  PP: {PNV: 0.2, PSOE: 0.3, UPyD: 0.4}
-  PSOE: {IU: 0.3, PNV: 0.2, PP: 0.2, UPyD: 0.2}
-  R: {AMA: 0.2, IU: 0.6, PNV: 0.1}
-  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  AMA:
+    IU: 0.2
+    PNV: 0.6
+    PSOE: 0.1
+  IU:
+    AMA: 0.2
+    PSOE: 0.4
+    UPyD: 0.3
+  PNV:
+    AMA: 0.5
+    PP: 0.2
+    PSOE: 0.2
+  PP:
+    PNV: 0.2
+    PSOE: 0.3
+    UPyD: 0.4
+  PSOE:
+    IU: 0.3
+    PNV: 0.2
+    PP: 0.2
+    UPyD: 0.2
+  R:
+    AMA: 0.2
+    IU: 0.6
+    PNV: 0.1
+  UPyD:
+    IU: 0.3
+    PP: 0.3
+    PSOE: 0.3

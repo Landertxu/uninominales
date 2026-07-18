@@ -1,18 +1,55 @@
 parties:
-  C's: [44, 45, 46]
-  CiU: [60, 61]
-  ERC: [76, 278]
-  IU: [110, 111, 119, 120, 121, 128, 129]
-  PP: [209, 210, 211, 248]
-  PSOE: [225, 226, 238, 239]
-  UPyD: [270, 271, 272]
-
+  C's:
+  - 44
+  - 45
+  - 46
+  CiU:
+  - 60
+  - 61
+  ERC:
+  - 76
+  - 278
+  IU:
+  - 110
+  - 111
+  PP:
+  - 209
+  - 210
+  - 211
+  - 248
+  PSOE:
+  - 238
+  - 239
+  UPyD:
+  - 271
 transfers:
-  C's: {UPyD: 0.9}
-  CiU: {ERC: 0.3, PP: 0.4, PSOE: 0.2}
-  ERC: {CiU: 0.3, IU: 0.3, PSOE: 0.3}
-  IU: {ERC: 0.3, PSOE: 0.5, UPyD: 0.1}
-  PP: {CiU: 0.3, PSOE: 0.3, UPyD: 0.3}
-  PSOE: {ERC: 0.2, IU: 0.5, UPyD: 0.2}
-  R: {ERC: 0.2, IU: 0.6, UPyD: 0.1}
-  UPyD: {IU: 0.2, PP: 0.4, PSOE: 0.3}
+  C's:
+    UPyD: 0.9
+  CiU:
+    ERC: 0.3
+    PP: 0.4
+    PSOE: 0.2
+  ERC:
+    CiU: 0.3
+    IU: 0.3
+    PSOE: 0.3
+  IU:
+    ERC: 0.3
+    PSOE: 0.5
+    UPyD: 0.1
+  PP:
+    CiU: 0.3
+    PSOE: 0.3
+    UPyD: 0.3
+  PSOE:
+    ERC: 0.2
+    IU: 0.5
+    UPyD: 0.2
+  R:
+    ERC: 0.2
+    IU: 0.6
+    UPyD: 0.1
+  UPyD:
+    IU: 0.2
+    PP: 0.4
+    PSOE: 0.3

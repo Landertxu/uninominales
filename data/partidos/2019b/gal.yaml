@@ -1,18 +1,49 @@
 parties:
-  BNG: [10]
-  C's: [18, 19]
-  MP: [46]
-  PP: [83, 84, 85, 86]
-  PSOE: [91, 93, 94]
-  UP: [74, 78, 81, 82]
-  VOX: [116]
-
+  BNG:
+  - 10
+  C's:
+  - 18
+  MP:
+  - 46
+  PP:
+  - 83
+  PSOE:
+  - 91
+  - 93
+  UP:
+  - 74
+  VOX:
+  - 116
 transfers:
-  BNG: {UP: 0.5, PSOE: 0.3, PP: 0.1}
-  C's: {PP: 0.4, PSOE: 0.3, UP: 0.1, VOX: 0.1}
-  MP: {UP: 0.4, PSOE: 0.4, C's: 0.1}
-  PP: {C's: 0.4, VOX: 0.3, PSOE: 0.1}
-  PSOE: {UP: 0.4, BNG: 0.3, C's: 0.2}
-  UP: {BNG: 0.3, PSOE: 0.4, C's: 0.2}
-  VOX: {PP: 0.7, C's: 0.2}
-  R: {C's: 0.3, PP: 0.3, PSOE: 0.3}
+  BNG:
+    PP: 0.1
+    PSOE: 0.3
+    UP: 0.5
+  C's:
+    PP: 0.4
+    PSOE: 0.3
+    UP: 0.1
+    VOX: 0.1
+  MP:
+    C's: 0.1
+    PSOE: 0.4
+    UP: 0.4
+  PP:
+    C's: 0.4
+    PSOE: 0.1
+    VOX: 0.3
+  PSOE:
+    BNG: 0.3
+    C's: 0.2
+    UP: 0.4
+  R:
+    C's: 0.3
+    PP: 0.3
+    PSOE: 0.3
+  UP:
+    BNG: 0.3
+    C's: 0.2
+    PSOE: 0.4
+  VOX:
+    C's: 0.2
+    PP: 0.7

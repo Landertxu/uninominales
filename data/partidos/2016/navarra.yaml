@@ -1,16 +1,39 @@
 parties:
-  C's: [13, 14, 15]
-  EHB: [23]
-  GB: [30]
-  P's: [54, 59, 63]
-  PP: [68, 92]
-  PSOE: [77]
-
+  C's:
+  - 13
+  EHB:
+  - 23
+  GB:
+  - 30
+  P's:
+  - 63
+  PP:
+  - 92
+  PSOE:
+  - 77
 transfers:
-  C's: {P's: 0.1, PP: 0.5, PSOE: 0.3}
-  EHB: {P's: 0.7, PSOE: 0.2}
-  GB: {EHB: 0.5, P's: 0.3, PSOE: 0.1}
-  P's: {C's: 0.2, EHB: 0.2, PSOE: 0.4}
-  PP: {C's: 0.6, PSOE: 0.3}
-  PSOE: {C's: 0.3, P's: 0.5, PP: 0.1}
-  R: {C's: 0.3, P's: 0.6}
+  C's:
+    P's: 0.1
+    PP: 0.5
+    PSOE: 0.3
+  EHB:
+    P's: 0.7
+    PSOE: 0.2
+  GB:
+    EHB: 0.5
+    P's: 0.3
+    PSOE: 0.1
+  P's:
+    C's: 0.2
+    EHB: 0.2
+    PSOE: 0.4
+  PP:
+    C's: 0.6
+    PSOE: 0.3
+  PSOE:
+    C's: 0.3
+    P's: 0.5
+    PP: 0.1
+  R:
+    C's: 0.3
+    P's: 0.6

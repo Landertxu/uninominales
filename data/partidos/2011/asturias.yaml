@@ -1,14 +1,33 @@
 parties:
-  FAC: [60]
-  IU: [19, 74, 77, 78, 79, 88, 92, 93, 94]
-  PP: [127, 128, 129, 130, 131]
-  PSOE: [136, 137]
-  UPyD: [168]
-
+  FAC:
+  - 60
+  IU:
+  - 74
+  PP:
+  - 127
+  PSOE:
+  - 136
+  UPyD:
+  - 168
 transfers:
-  FAC: {PP: 0.6, PSOE: 0.1, UPyD: 0.2}
-  IU: {PSOE: 0.6, UPyD: 0.3}
-  PP: {PSOE: 0.3, UPyD: 0.6}
-  PSOE: {IU: 0.6, PP: 0.1, UPyD: 0.2}
-  R: {IU: 0.8, UPyD: 0.1}
-  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  FAC:
+    PP: 0.6
+    PSOE: 0.1
+    UPyD: 0.2
+  IU:
+    PSOE: 0.6
+    UPyD: 0.3
+  PP:
+    PSOE: 0.3
+    UPyD: 0.6
+  PSOE:
+    IU: 0.6
+    PP: 0.1
+    UPyD: 0.2
+  R:
+    IU: 0.8
+    UPyD: 0.1
+  UPyD:
+    IU: 0.3
+    PP: 0.3
+    PSOE: 0.3

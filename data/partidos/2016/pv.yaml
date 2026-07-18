@@ -1,16 +1,45 @@
 parties:
-  C's: [13, 14, 15]
-  EHB: [23]
-  PNV: [16]
-  P's: [54, 59, 63]
-  PP: [68, 69]
-  PSOE: [76, 77]
-
+  C's:
+  - 13
+  EHB:
+  - 23
+  P's:
+  - 54
+  PNV:
+  - 16
+  PP:
+  - 68
+  PSOE:
+  - 76
 transfers:
-  C's: {P's: 0.1, PP: 0.5, PSOE: 0.3}
-  EHB: {P's: 0.4, PNV: 0.4, PSOE: 0.1}
-  PNV: {EHB: 0.4, P's: 0.1, PP: 0.2, PSOE: 0.2}
-  P's: {C's: 0.2, EHB: 0.2, PSOE: 0.4}
-  PP: {C's: 0.5, PNV: 0.2, PSOE: 0.2}
-  PSOE: {C's: 0.2, P's: 0.4, PNV: 0.2, PP: 0.1}
-  R: {C's: 0.2, EHB: 0.2, P's: 0.4, PNV: 0.1}
+  C's:
+    P's: 0.1
+    PP: 0.5
+    PSOE: 0.3
+  EHB:
+    P's: 0.4
+    PNV: 0.4
+    PSOE: 0.1
+  P's:
+    C's: 0.2
+    EHB: 0.2
+    PSOE: 0.4
+  PNV:
+    EHB: 0.4
+    P's: 0.1
+    PP: 0.2
+    PSOE: 0.2
+  PP:
+    C's: 0.5
+    PNV: 0.2
+    PSOE: 0.2
+  PSOE:
+    C's: 0.2
+    P's: 0.4
+    PNV: 0.2
+    PP: 0.1
+  R:
+    C's: 0.2
+    EHB: 0.2
+    P's: 0.4
+    PNV: 0.1

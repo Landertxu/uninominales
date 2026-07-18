@@ -1,22 +1,53 @@
 parties:
-  C's: [18, 19]
-  CpM: [17]
-  PP: [83, 84, 85, 86]
-  PSOE: [90, 91, 92, 93, 94]
-  TE: [108]
-  UPL: [113]
-  UP: [74, 75, 76, 77, 78, 79, 80, 81, 82]
-  VOX: [116]
-  MP: [43, 44, 45, 46, 50, 51]
-
+  C's:
+  - 18
+  CpM:
+  - 17
+  MP:
+  - 46
+  PP:
+  - 83
+  PSOE:
+  - 94
+  UP:
+  - 78
+  UPL:
+  - 113
+  VOX:
+  - 116
 transfers:
-  C's: {PP: 0.4, PSOE: 0.3, UP: 0.1, VOX: 0.1}
-  CpM: {PSOE: 0.5, PP: 0.3}
-  PP: {C's: 0.4, VOX: 0.3, PSOE: 0.1}
-  PSOE: {C's: 0.3, UP: 0.5, PP: 0.1}
-  TE: {PSOE: 0.4, UP: 0.4, C's: 0.1}
-  UPL: {PSOE: 0.4, PP: 0.3, C's: 0.2}
-  UP: {C's: 0.2, PSOE: 0.5, PP: 0.1}
-  VOX: {PP: 0.7, C's: 0.2}
-  MP: {UP: 0.4, PSOE: 0.4, C's: 0.1}
-  R: {C's: 0.3, PP: 0.3, PSOE: 0.3}
+  C's:
+    PP: 0.4
+    PSOE: 0.3
+    UP: 0.1
+    VOX: 0.1
+  CpM:
+    PP: 0.3
+    PSOE: 0.5
+  MP:
+    C's: 0.1
+    PSOE: 0.4
+    UP: 0.4
+  PP:
+    C's: 0.4
+    PSOE: 0.1
+    VOX: 0.3
+  PSOE:
+    C's: 0.3
+    PP: 0.1
+    UP: 0.5
+  R:
+    C's: 0.3
+    PP: 0.3
+    PSOE: 0.3
+  UP:
+    C's: 0.2
+    PP: 0.1
+    PSOE: 0.5
+  UPL:
+    C's: 0.2
+    PP: 0.3
+    PSOE: 0.4
+  VOX:
+    C's: 0.2
+    PP: 0.7

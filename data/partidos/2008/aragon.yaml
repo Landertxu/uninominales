@@ -1,16 +1,39 @@
 parties:
-  CHA: [38]
-  IU: [119, 121, 128, 129]
-  PAR: [164]
-  PP: [209, 210]
-  PSOE: [225, 226]
-  UPyD: [270, 271]
-
+  CHA:
+  - 38
+  IU:
+  - 129
+  PAR:
+  - 164
+  PP:
+  - 210
+  PSOE:
+  - 226
+  UPyD:
+  - 271
 transfers:
-  CHA: {IU: 0.3, PAR: 0.3, PSOE: 0.3}
-  IU: {PSOE: 0.6, UPyD: 0.3}
-  PAR: {CHA: 0.3, PP: 0.5, PSOE: 0.1}
-  PP: {PSOE: 0.3, UPyD: 0.6}
-  PSOE: {IU: 0.6, PP: 0.1, UPyD: 0.2}
-  R: {IU: 0.8, UPyD: 0.1}
-  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  CHA:
+    IU: 0.3
+    PAR: 0.3
+    PSOE: 0.3
+  IU:
+    PSOE: 0.6
+    UPyD: 0.3
+  PAR:
+    CHA: 0.3
+    PP: 0.5
+    PSOE: 0.1
+  PP:
+    PSOE: 0.3
+    UPyD: 0.6
+  PSOE:
+    IU: 0.6
+    PP: 0.1
+    UPyD: 0.2
+  R:
+    IU: 0.8
+    UPyD: 0.1
+  UPyD:
+    IU: 0.3
+    PP: 0.3
+    PSOE: 0.3

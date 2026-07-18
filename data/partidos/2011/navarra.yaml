@@ -1,16 +1,42 @@
 parties:
-  AMA: [3]
-  GB: [53, 54, 61]
-  IU: [70, 71, 79, 88, 89, 90]
-  PP: [127, 128, 167]
-  PSOE: [135, 136, 137]
-  UPyD: [168]
-
+  AMA:
+  - 3
+  GB:
+  - 61
+  IU:
+  - 71
+  PP:
+  - 167
+  PSOE:
+  - 136
+  UPyD:
+  - 168
 transfers:
-  AMA: {GB: 0.8, IU: 0.1}
-  GB: {AMA: 0.8, IU: 0.1}
-  IU: {AMA: 0.2, GB: 0.1, PSOE: 0.4, UPyD: 0.2}
-  PP: {GB: 0.1, PSOE: 0.3, UPyD: 0.5}
-  PSOE: {GB: 0.2, IU: 0.3, PP: 0.2, UPyD: 0.2}
-  R: {AMA: 0.1, GB: 0.2, IU: 0.6}
-  UPyD: {IU: 0.3, PP: 0.3, PSOE: 0.3}
+  AMA:
+    GB: 0.8
+    IU: 0.1
+  GB:
+    AMA: 0.8
+    IU: 0.1
+  IU:
+    AMA: 0.2
+    GB: 0.1
+    PSOE: 0.4
+    UPyD: 0.2
+  PP:
+    GB: 0.1
+    PSOE: 0.3
+    UPyD: 0.5
+  PSOE:
+    GB: 0.2
+    IU: 0.3
+    PP: 0.2
+    UPyD: 0.2
+  R:
+    AMA: 0.1
+    GB: 0.2
+    IU: 0.6
+  UPyD:
+    IU: 0.3
+    PP: 0.3
+    PSOE: 0.3
