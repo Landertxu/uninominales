@@ -6,6 +6,8 @@ parties:
   - 32
   ERC:
   - 37
+  FR:
+  - 42
   JxCAT:
   - 49
   PP:
@@ -30,6 +32,9 @@ transfers:
     ECP: 0.4
     JxCAT: 0.3
     PSOE: 0.1
+  FR:
+    ERC: 0.3
+    JxCAT: 0.2
   JxCAT:
     C's: 0.2
     ERC: 0.5

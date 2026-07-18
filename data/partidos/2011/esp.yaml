@@ -1,14 +1,19 @@
 parties:
+  Caballas:
+  - 22
+  EQUO:
+  - 39
   IU:
   - 77
   - 78
   - 79
   - 85
   - 88
-  - 91
   - 92
   - 93
   - 94
+  IU-CyL:
+  - 81
   PP:
   - 127
   - 128
@@ -20,9 +25,14 @@ parties:
   UPyD:
   - 168
 transfers:
+  Caballas: {}
+  EQUO: {}
   IU:
     PSOE: 0.6
     UPyD: 0.3
+  IU-CyL:
+    PP: 0.2
+    PSOE: 0.5
   PP:
     PSOE: 0.3
     UPyD: 0.6

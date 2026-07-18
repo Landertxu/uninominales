@@ -10,6 +10,8 @@ parties:
   - 225
   - 226
   - 227
+  PdeAL:
+  - 191
 transfers:
   IU:
     PSOE: 0.5
@@ -18,5 +20,6 @@ transfers:
   PSOE:
     IU: 0.5
     PP: 0.1
+  PdeAL: {}
   R:
     IU: 0.7

@@ -1,6 +1,8 @@
 parties:
   C's:
   - 2
+  ElPi:
+  - 56
   MES:
   - 59
   P's:
@@ -13,6 +15,9 @@ transfers:
   C's:
     P's: 0.1
     PP: 0.5
+    PSOE: 0.3
+  ElPi:
+    PP: 0.4
     PSOE: 0.3
   MES:
     P's: 0.6

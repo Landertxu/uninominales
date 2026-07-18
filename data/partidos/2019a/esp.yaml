@@ -1,8 +1,12 @@
 parties:
   C's:
   - 22
+  CpM:
+  - 21
   PP:
   - 83
+  PPSO:
+  - 88
   PSOE:
   - 96
   UP:
@@ -15,10 +19,13 @@ transfers:
     PSOE: 0.3
     UP: 0.1
     VOX: 0.1
+  CpM: {}
   PP:
     C's: 0.4
     PSOE: 0.1
     VOX: 0.3
+  PPSO:
+    PP: 0.3
   PSOE:
     C's: 0.3
     PP: 0.1

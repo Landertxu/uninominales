@@ -1,4 +1,6 @@
 parties:
+  CHA-IU:
+  - 18
   IU:
   - 19
   PP:
@@ -8,6 +10,9 @@ parties:
   UPyD:
   - 168
 transfers:
+  CHA-IU:
+    PP: 0.2
+    PSOE: 0.5
   IU:
     PSOE: 0.6
     UPyD: 0.3
