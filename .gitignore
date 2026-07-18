@@ -13,10 +13,11 @@ __pycache__/
 # Virtual environment
 env/
 
-# Large data files (keep source, ignore generated)
-data/mapas/molde/*.shp
-data/mapas/molde/*.dbf
-data/mapas/molde/*.shx
+# Raw election data (large DAT files, ~25 MB each)
+data/raw/
+
+# Generated maps (large shapefiles)
+data/mapas/
 
 # Backup folder
 uninominales_v3_backup/

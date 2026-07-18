@@ -1,6 +1,10 @@
-# Simulador de Elecciones Generales - Sistema Uninominal Mayoría Simple (UMS)
+# Spanish General Elections Simulator — First-Past-The-Post
 
-Simula elecciones generales españolas bajo el sistema de distritos uninominales (first-past-the-post) usando datos oficiales del INE.
+Simulates Spanish general elections using first-past-the-post (uninominales) districts with official INE data.
+
+![2019 April election map](images/mapa2019a.png)
+
+*Simulated result of the April 2019 election — 35 constituencies, 350 seats*
 
 ## Quick Start
 
@@ -19,7 +23,18 @@ python3 run.py
 python3 run.py --year 2015
 ```
 
-## Workflow Options
+### Available years
+
+| Year | Flag | Notes |
+|------|------|-------|
+| 2008 | `--year 2008` | |
+| 2011 | `--year 2011` | |
+| 2015 | `--year 2015` | Default |
+| 2016 | `--year 2016` | |
+| 2019 (April) | `--year 2019a` | |
+| 2019 (November) | `--year 2019b` | |
+
+### Workflow options
 
 ```bash
 # Skip map rendering (generate shapefile only)
@@ -39,13 +54,19 @@ python3 run.py --method plurality
 python3 run.py --width 1200 --height 1000
 ```
 
+## Downloading election data
+
+1. Go to the [INE Electoral Data Download](https://infoelectoral.interior.gob.es/es/elecciones-celebradas/area-de-descargas/)
+2. Select: Ambito → Mesa, Tipo → Candidatura
+3. Choose the year and download the ZIP
+4. Extract the `.DAT` file to `data/raw/YYYY/` (e.g. `data/raw/2015/`)
+
 ## Project Structure
 
 ```
-uninominales_v3/
+uninominales/
 ├── run.py                    # Main orchestrator script
 ├── src/                      # Source modules
-│   ├── __init__.py
 │   ├── dat_parser.py         # INE DAT file parser
 │   ├── party_parser.py       # Party transfer file parser (YAML)
 │   ├── constituency_parser.py # Constituency definition parser
@@ -53,91 +74,61 @@ uninominales_v3/
 │   ├── election_runner.py    # Simulation orchestrator
 │   ├── shapefile_gen.py      # Shapefile generator
 │   └── visualization/        # Map renderer (package)
-│       ├── __init__.py       # render_map() entry point
 │       ├── core.py           # Core drawing utilities
 │       ├── config.py         # Party colors and constants
 │       ├── canarias.py       # Canary Islands relocation
 │       ├── insets.py         # Madrid / Barcelona inset maps
 │       └── connections.py    # Island connection boxes
-├── data/                     # Input data
-│   ├── raw/                  # INE election DAT files (2008, 2011, 2015)
-│   ├── circunscripciones/    # 52 flat province files (circ01..circ52.dat)
-│   ├── partidos/             # Party transfer files (YAML)
+├── data/
+│   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
+│   ├── circunscripciones/    # 52 province constituency definitions
+│   ├── partidos/             # Party YAML files
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008
 │   │   ├── 2011/             # Per-region files for 2011
-│   │   ── 2015/             # Per-region files for 2015
-│   ├── regions.dat           # Province-code -> region-name mapping
+│   │   ├── 2015/             # Per-region files for 2015
+│   │   ├── 2016/             # Per-region files for 2016
+│   │   ├── 2019a/            # Per-region files for April 2019
+│   │   └── 2019b/            # Per-region files for November 2019
+│   ├── regions.dat           # Province code → region name mapping
 │   └── mapas/molde/          # Template census-section shapefile
-├── output/                   # Generated outputs
+├── output/                   # Generated shapefiles and PNG maps
+├── images/                   # README images
+├── tests/                    # Test suite
+│   ├── golden/               # Golden reference PNG images
+│   └── test_*.py             # Unit and regression tests
 ├── requirements.txt          # Python dependencies
+├── LICENSE                   # MIT License
 └── README.md
 ```
 
-## How It Works
+## How it works
 
-1. **Data Parsing** (`src/dat_parser.py`)
-   - Parses INE fixed-width DAT files (candidatura data per census section)
-   - Aggregates votes by census section and party
+1. **Data Parsing** (`src/dat_parser.py`) — Parses INE fixed-width DAT files (candidatura data per census section), aggregates votes by census section and party.
 
-2. **Simulation** (`src/simulation.py` + `src/election_runner.py`)
-   - For each constituency defined in `circXX.dat`:
-     - Queries the preloaded data for all party votes within that district
-     - Applies transfer rules: eliminated parties' votes flow to other parties
-     - The party with the most votes after transfers wins the seat
-   - The special party `R` (resto) collects votes of minor/unknown candidaturas
-     and is always redistributed — it cannot win a seat
-   - Returns winners and constituency mappings
+2. **Simulation** (`src/simulation.py` + `src/election_runner.py`) — For each of the 52 provinces, collects all party votes, applies transfer rules (eliminated parties' votes flow to others), and the party with the most votes wins the seat. The special party `R` (resto) collects minor/unknown candidaturas and is always redistributed.
 
-3. **Shapefile Generation** (`src/shapefile_gen.py`)
-   - Reads the template census-section shapefile
-   - Adds CIRC (constituency) and PARTIDO (winning party) columns
-   - Saves to `output/mapa{YEAR}.shp`
+3. **Shapefile Generation** (`src/shapefile_gen.py`) — Reads a template census-section shapefile, adds constituency and winning party columns, saves to `output/mapa{YEAR}.shp`.
 
-4. **Visualization** (`src/visualization/`)
-   - Renders the shapefile to a PNG image
-   - Detects constituency borders using unique-color technique
-   - Relocates Canary Islands to bottom-left corner
-   - Draws Madrid and Barcelona inset maps with connector lines
-   - Draws party-colored constituencies with legend
+4. **Visualization** (`src/visualization/`) — Renders the shapefile to a PNG with Canary Islands relocation, Madrid/Barcelona inset maps, and party-colored constituencies with legend.
 
-## Data Files
+## Testing
 
-- **data/raw/** — INE election DAT files (2008, 2011, 2015)
-- **data/circunscripciones/** — 52 flat province files (one per province, circ01..circ52)
-- **data/partidos/** — Per-year, per-region YAML files with party codes and vote transfers
-- **data/partidos/parties.yaml** — Central party names and visualization colors
-- **data/regions.dat** — Maps each province code to the region whose party file applies
-- **data/mapas/molde/** — Template census-section shapefile
+```bash
+# Fast tests (unit + regression)
+pytest
 
-## INE DAT File Format (36 chars/line)
+# Slow tests (golden PNG comparison, ~2 min)
+pytest --runslow
 
-| Field | Position | Description |
-|-------|----------|-------------|
-| Process type | 0:2 | Process code (e.g. '02' for general elections) |
-| Year | 2:6 | Election year (e.g. '2015') |
-| Month | 6:8 | Election month |
-| Round | 8:11 | Round/region constant (e.g. '100') |
-| CUSEC | 11:21 | Census section: province(2) + municipality(3) + district(2) + section(3) |
-| Space | 21 | Separator |
-| Category | 22 | Candidatura letter code (data category, NOT party ID) |
-| Candidatura | 23:29 | 6-digit numeric code (maps to party via party files) |
-| Votes | 29:36 | Vote count (7 digits, zero-padded) |
+# Regenerate golden images after intentional changes
+pytest --regenerate-golden
+```
 
-## Differences from the original `uninominales` (Python 2 / MySQL)
+## AI assistance
 
-The original algorithm treated the synthetic party `R` (resto) as a regular party — it could be *protected* from elimination if it earned ≥20% of a district's votes, and could even win a seat. This version intentionally changes that behavior:
+This project was originally written by Landertxu and later rewritten with the assistance of AI.
 
-- **R is always eliminated** and its votes redistributed via transfer rules
-- **R is excluded** from the final winner selection
+## License
 
-This change was made because R is an artificial catch-all for minor/unknown candidaturas and should never win. On historical data (2008–2016) the change never triggers. For 2019, it flips one seat: in **Navarra4** (April 2019), the original algorithm gives EHB the seat (R=21% was protected), while v3 gives it to PSOE after draining R's votes.
-
-## Output
-
-Results are saved to `output/mapa{YEAR}.shp` with fields:
-- All original census-section shapefile fields
-- `CIRC` — Constituency name
-- `PARTIDO` — Winning party abbreviation
-
-The map image is saved to `output/mapa{YEAR}.png`.
+MIT
