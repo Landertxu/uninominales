@@ -1,11 +1,15 @@
-# AGENTS.md — uninominales_v3
+# AGENTS.md — uninominales
 
 Spanish election simulator (FPTP/uninominales) using INE DAT files. Python 3, no database — all data parsed in-memory.
+
+## Workflow
+
+- **Always ask before committing.** The user wants to review changes before they go into git.
 
 ## Run commands
 
 ```bash
-# Always run from uninominales_v3/
+# Always run from uninominales/
 python3 run.py                          # Default: 2015, transfer method
 python3 run.py --year 2016              # Specify year (string, not int)
 python3 run.py --year 2019a             # April 2019 election
