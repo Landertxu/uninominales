@@ -4,8 +4,10 @@ Runs the FPTP simulation for a given year, processing all regions
 and generating the output shapefile.
 """
 
+import bisect
 import collections
 import os
+from dataclasses import dataclass
 
 from .dat_parser import parse_dat_file
 from .party_parser import read_party_file
@@ -22,6 +24,19 @@ YEARS = {
     "2019a": "data/raw/2019a/10021904.DAT",
     "2019b": "data/raw/2019b/10021911.DAT",
 }
+
+
+@dataclass
+class YearData:
+    """Preprocessed vote data for a single election year.
+
+    Attributes:
+        raw: dict mapping mesa -> {candidatura: votos}.
+        sorted_mesas: list of all mesa codes, sorted lexicographically.
+    """
+
+    raw: dict
+    sorted_mesas: list
 
 
 def load_region_map(regions_path="data/regions.dat"):
@@ -62,17 +77,28 @@ def find_party_file(region_name, year):
 def load_year_data(year):
     """Load all vote data for a year into memory from the raw DAT file.
 
-    Returns dict mapping mesa -> {candidatura: votos}.
+    Returns a YearData object with raw mesa-level data and a sorted list
+    of all mesa codes for fast prefix-based queries.
     """
     path = YEARS.get(year)
     if not path or not os.path.exists(path):
-        return {}
+        return YearData(raw={}, sorted_mesas=[])
     data = {}
     for mesa, candidatura, votos in parse_dat_file(path):
         if mesa not in data:
             data[mesa] = {}
-        data[mesa][int(candidatura)] = data[mesa].get(int(candidatura), 0) + votos
-    return data
+        cand_int = int(candidatura)
+        data[mesa][cand_int] = data[mesa].get(cand_int, 0) + votos
+
+    sorted_mesas = sorted(data.keys())
+    return YearData(raw=data, sorted_mesas=sorted_mesas)
+
+
+def _mesas_for_prefix(sorted_mesas, prefix):
+    """Return the slice of sorted mesa codes that start with prefix."""
+    lo = bisect.bisect_left(sorted_mesas, prefix)
+    hi = bisect.bisect_right(sorted_mesas, prefix + "~")
+    return sorted_mesas[lo:hi]
 
 
 def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
@@ -81,17 +107,26 @@ def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
     Returns a dict mapping party -> total votes.
     """
     votes = collections.Counter()
+    sorted_mesas = year_data.sorted_mesas
 
-    for mesa, mesa_votes in year_data.items():
-        included = any(mesa.startswith(code) for code in inclusion_codes)
-        excluded = any(mesa.startswith(code) for code in exclusion_codes)
+    # Build sets of mesas matching inclusion/exclusion prefixes.
+    included = set()
+    for code in inclusion_codes:
+        included.update(_mesas_for_prefix(sorted_mesas, code))
 
-        if included and not excluded:
-            for candidatura, votos in mesa_votes.items():
-                votes[candidatura] += votos
-        elif excluded and not included:
-            for candidatura, votos in mesa_votes.items():
-                votes[candidatura] -= votos
+    excluded = set()
+    for code in exclusion_codes:
+        excluded.update(_mesas_for_prefix(sorted_mesas, code))
+
+    add_mesas = included - excluded
+    sub_mesas = excluded - included
+
+    for mesa in add_mesas:
+        for candidatura, votos in year_data.raw[mesa].items():
+            votes[candidatura] += votos
+    for mesa in sub_mesas:
+        for candidatura, votos in year_data.raw[mesa].items():
+            votes[candidatura] -= votos
 
     return dict(votes)
 
@@ -120,7 +155,7 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
         return {}, {}, {}
 
     # Get available provinces from loaded data
-    available_provinces = set(mesa[:2] for mesa in year_data)
+    available_provinces = set(mesa[:2] for mesa in year_data.raw)
     print(f"[INFO] Available provinces: {sorted(available_provinces)}")
 
     # Group province files by region (so each party file is loaded once)
