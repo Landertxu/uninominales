@@ -16,8 +16,8 @@ env/
 # Raw election data (large DAT files, ~25 MB each)
 data/raw/
 
-# Generated maps (large shapefiles)
-data/mapas/
+# Template map shapefiles (large binary files, not tracked)
+data/mapas/molde/
 
 # Backup folder
 uninominales_v3_backup/

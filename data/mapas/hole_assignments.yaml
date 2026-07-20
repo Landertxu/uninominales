@@ -1,0 +1,701 @@
+holes:
+  hole_00000:
+    province: '17'
+    circ: girona2
+    area_m2: 0.5699948934308112
+    border_lengths:
+      girona2: 820.8681298911597
+  hole_00001:
+    province: 09
+    circ: burgos3
+    area_m2: 5845952.679619973
+    border_lengths:
+      burgos3: 11389.519328506587
+  hole_00002:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.16695131931900703
+    border_lengths:
+      caceres2: 226.49375619193705
+  hole_00003:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.031118806663908812
+    border_lengths:
+      caceres2: 45.960639458630745
+  hole_00004:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.1479060583767789
+    border_lengths:
+      caceres2: 202.41246401517856
+  hole_00005:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.1519898932495363
+    border_lengths:
+      caceres2: 206.87275272922392
+  hole_00006:
+    province: '10'
+    circ: caceres2
+    area_m2: 36.084198605048044
+    border_lengths:
+      caceres2: 234.10678438221197
+  hole_00007:
+    province: '10'
+    circ: caceres2
+    area_m2: 41.93317911253804
+    border_lengths:
+      caceres2: 813.8701332301212
+  hole_00008:
+    province: '10'
+    circ: caceres2
+    area_m2: 21.449400827777936
+    border_lengths:
+      caceres2: 557.2419931400493
+  hole_00009:
+    province: '10'
+    circ: caceres2
+    area_m2: 672.7494984552854
+    border_lengths:
+      caceres2: 385.34323074175654
+  hole_00010:
+    province: '10'
+    circ: caceres2
+    area_m2: 1288.5130417669643
+    border_lengths:
+      caceres2: 1265.0937109501783
+  hole_00011:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.18910315183916293
+    border_lengths:
+      caceres2: 235.599621777116
+  hole_00012:
+    province: '10'
+    circ: caceres2
+    area_m2: 107.62525070356787
+    border_lengths:
+      caceres2: 889.5126922837728
+  hole_00013:
+    province: '10'
+    circ: caceres2
+    area_m2: 0.20260363190175212
+    border_lengths:
+      caceres2: 467.2687880911543
+  hole_00014:
+    province: '24'
+    circ: leon4
+    area_m2: 651421.0774814778
+    border_lengths:
+      leon4: 3518.7205305874168
+  hole_00015:
+    province: '37'
+    circ: salamanca3
+    area_m2: 913328.7695557142
+    border_lengths:
+      salamanca3: 4520.435095672788
+  hole_00016:
+    province: '24'
+    circ: leon2
+    area_m2: 8948230.15914627
+    border_lengths:
+      leon2: 18069.05311565865
+  hole_00017:
+    province: '29'
+    circ: malaga7
+    area_m2: 105.31904535919557
+    border_lengths:
+      malaga7: 89.98079662346726
+  hole_00018:
+    province: '29'
+    circ: malaga7
+    area_m2: 1.1400452947489441
+    border_lengths:
+      malaga7: 370.7517993046673
+  hole_00019:
+    province: '40'
+    circ: segovia1
+    area_m2: 55900305.99845278
+    border_lengths:
+      segovia1: 48284.81366482072
+  hole_00020:
+    province: '39'
+    circ: cantabria4
+    area_m2: 68700278.18543343
+    border_lengths:
+      cantabria4: 43345.829059328644
+  hole_00021:
+    province: 09
+    circ: burgos2
+    area_m2: 721225.7330033622
+    border_lengths:
+      burgos2: 3789.807013906487
+  hole_00022:
+    province: 09
+    circ: burgos2
+    area_m2: 612689.861162616
+    border_lengths:
+      burgos2: 3785.7422410271183
+  hole_00023:
+    province: 09
+    circ: burgos3
+    area_m2: 9767600.200800309
+    border_lengths:
+      burgos3: 9424.625812800563
+      segovia1: 4686.430163828536
+  hole_00024:
+    province: 09
+    circ: burgos3
+    area_m2: 629453.84514803
+    border_lengths:
+      burgos3: 3772.552473860511
+  hole_00025:
+    province: 09
+    circ: burgos2
+    area_m2: 434744.67519900145
+    border_lengths:
+      burgos2: 3141.485174481918
+  hole_00026:
+    province: 09
+    circ: burgos2
+    area_m2: 707393.3983941054
+    border_lengths:
+      burgos2: 5728.240945942908
+  hole_00027:
+    province: '20'
+    circ: guipuzcoa5
+    area_m2: 36359745.29957781
+    border_lengths:
+      guipuzcoa5: 20612.273807518897
+      alava2: 11678.21894451246
+      navarra4: 8467.647016555895
+  hole_00028:
+    province: '31'
+    circ: navarra1
+    area_m2: 264031025.3549362
+    border_lengths:
+      navarra1: 66033.24999440921
+      navarra4: 52001.25874941888
+      alava2: 32385.56518826244
+  hole_00029:
+    province: '31'
+    circ: navarra1
+    area_m2: 43914357.597851194
+    border_lengths:
+      navarra1: 80925.66095060961
+      alava2: 11565.710859212555
+  hole_00030:
+    province: '19'
+    circ: guadalajara2
+    area_m2: 44724238.21768599
+    border_lengths:
+      guadalajara2: 27199.70205215949
+  hole_00031:
+    province: 09
+    circ: burgos3
+    area_m2: 180618822.3470966
+    border_lengths:
+      burgos3: 92493.17395132291
+  hole_00032:
+    province: 09
+    circ: burgos3
+    area_m2: 3901758.0532881916
+    border_lengths:
+      burgos3: 8294.244044655876
+  hole_00033:
+    province: 09
+    circ: burgos3
+    area_m2: 5869632.381316143
+    border_lengths:
+      burgos3: 11770.09152547262
+  hole_00034:
+    province: '40'
+    circ: segovia1
+    area_m2: 71244870.30995016
+    border_lengths:
+      segovia1: 66697.66363292682
+      guadalajara2: 1584.1698087830139
+  hole_00035:
+    province: 09
+    circ: burgos2
+    area_m2: 348319.30775123806
+    border_lengths:
+      burgos2: 3325.724252923881
+  hole_00036:
+    province: 09
+    circ: burgos3
+    area_m2: 17086088.50237407
+    border_lengths:
+      burgos3: 25213.43020267631
+  hole_00037:
+    province: 09
+    circ: burgos3
+    area_m2: 8313064.822477104
+    border_lengths:
+      burgos3: 14229.782208077344
+  hole_00038:
+    province: 09
+    circ: burgos2
+    area_m2: 1258152.717265407
+    border_lengths:
+      burgos2: 4729.118825455787
+      burgos3: 2010.3519778099935
+  hole_00039:
+    province: 09
+    circ: burgos3
+    area_m2: 5074691.916497047
+    border_lengths:
+      burgos3: 14091.264765127271
+      soria1: 2578.23060038909
+  hole_00040:
+    province: '42'
+    circ: soria1
+    area_m2: 752740.2356338581
+    border_lengths:
+      soria1: 3038.3210218152203
+      burgos3: 1313.5491121441362
+  hole_00041:
+    province: 09
+    circ: burgos3
+    area_m2: 386169.17150535266
+    border_lengths:
+      burgos3: 2487.4517316978377
+  hole_00042:
+    province: 09
+    circ: burgos3
+    area_m2: 1754508.26678909
+    border_lengths:
+      burgos3: 6060.350902709453
+  hole_00043:
+    province: 09
+    circ: burgos3
+    area_m2: 256189.39031248004
+    border_lengths:
+      burgos3: 2165.147769602624
+  hole_00044:
+    province: 09
+    circ: burgos3
+    area_m2: 14159468.7088141
+    border_lengths:
+      burgos3: 26181.96444376445
+  hole_00045:
+    province: 09
+    circ: burgos3
+    area_m2: 2295760.67405984
+    border_lengths:
+      burgos3: 8971.267975923547
+  hole_00046:
+    province: 09
+    circ: burgos3
+    area_m2: 1966268.5558365486
+    border_lengths:
+      burgos3: 7852.49589079378
+  hole_00047:
+    province: 09
+    circ: burgos3
+    area_m2: 4453209.968123136
+    border_lengths:
+      burgos3: 10414.216557202511
+  hole_00048:
+    province: 09
+    circ: burgos3
+    area_m2: 670067.52035957
+    border_lengths:
+      burgos3: 4953.503517724192
+  hole_00049:
+    province: 09
+    circ: burgos3
+    area_m2: 237831.7489425944
+    border_lengths:
+      burgos3: 2370.055127889972
+  hole_00050:
+    province: '42'
+    circ: soria1
+    area_m2: 3850647.6006920696
+    border_lengths:
+      soria1: 11094.579071322525
+  hole_00051:
+    province: '42'
+    circ: soria1
+    area_m2: 276696.220857835
+    border_lengths:
+      soria1: 1362.7895847540628
+      burgos3: 1026.9289205101754
+  hole_00052:
+    province: 09
+    circ: burgos3
+    area_m2: 106399.79989670098
+    border_lengths:
+      burgos3: 1534.3948579663097
+  hole_00053:
+    province: 09
+    circ: burgos3
+    area_m2: 79002.6652630188
+    border_lengths:
+      burgos3: 1278.4385003551001
+  hole_00054:
+    province: 09
+    circ: burgos3
+    area_m2: 16664.044451219386
+    border_lengths:
+      burgos3: 700.4469836920589
+  hole_00055:
+    province: '01'
+    circ: alava2
+    area_m2: 4638104.364193642
+    border_lengths:
+      alava2: 8286.431996816571
+      burgos2: 2371.2259328292316
+  hole_00056:
+    province: '23'
+    circ: jaen5
+    area_m2: 6993001.2151177265
+    border_lengths:
+      jaen5: 5773.283113159291
+      ciudadreal2: 4290.878847956234
+      albacete3: 4023.377164046722
+  hole_00057:
+    province: '01'
+    circ: alava2
+    area_m2: 19801427.071017552
+    border_lengths:
+      alava2: 26399.075168850213
+  hole_00058:
+    province: '23'
+    circ: jaen5
+    area_m2: 8268497.874931875
+    border_lengths:
+      jaen5: 9247.472287153554
+      albacete3: 7618.411363347886
+  hole_00059:
+    province: '31'
+    circ: navarra1
+    area_m2: 1306566.502049916
+    border_lengths:
+      navarra1: 4379.680012008975
+      alava2: 3701.932717715156
+  hole_00060:
+    province: '26'
+    circ: rioja2
+    area_m2: 17408337.49445165
+    border_lengths:
+      rioja2: 23831.534673381273
+  hole_00061:
+    province: '31'
+    circ: navarra1
+    area_m2: 208140.65213421386
+    border_lengths:
+      navarra1: 2098.294608779781
+      alava2: 703.9875353929896
+  hole_00062:
+    province: '31'
+    circ: navarra1
+    area_m2: 3429140.0200416427
+    border_lengths:
+      navarra1: 4808.860891273638
+      alava2: 2515.377419361992
+  hole_00063:
+    province: '31'
+    circ: navarra1
+    area_m2: 1531501.69900277
+    border_lengths:
+      navarra1: 10296.67417026332
+  hole_00064:
+    province: '31'
+    circ: navarra1
+    area_m2: 75487.1998488081
+    border_lengths:
+      navarra1: 1622.0896052496614
+  hole_00065:
+    province: '31'
+    circ: navarra1
+    area_m2: 374364.0516331742
+    border_lengths:
+      navarra1: 3125.9562352763055
+  hole_00066:
+    province: '01'
+    circ: alava2
+    area_m2: 1245192.925405282
+    border_lengths:
+      alava2: 3347.2642511644985
+      navarra1: 2554.9206801162086
+  hole_00067:
+    province: '31'
+    circ: navarra1
+    area_m2: 944993.9060852135
+    border_lengths:
+      navarra1: 5269.495085102781
+  hole_00068:
+    province: '31'
+    circ: navarra5
+    area_m2: 418442359.40940017
+    border_lengths:
+      navarra5: 107298.75889018289
+      zaragoza7: 47680.89825063264
+      navarra1: 22670.11601994028
+  hole_00069:
+    province: '31'
+    circ: navarra4
+    area_m2: 36199543.66826611
+    border_lengths:
+      navarra4: 51636.55858788703
+  hole_00070:
+    province: '31'
+    circ: navarra4
+    area_m2: 1564789.9895792166
+    border_lengths:
+      navarra4: 5835.754722257261
+  hole_00071:
+    province: '31'
+    circ: navarra4
+    area_m2: 274359.9087457392
+    border_lengths:
+      navarra4: 2238.8000972046557
+  hole_00072:
+    province: '31'
+    circ: navarra1
+    area_m2: 216962.16134688415
+    border_lengths:
+      navarra1: 2555.8472247739883
+  hole_00073:
+    province: '31'
+    circ: navarra1
+    area_m2: 864285.7410968501
+    border_lengths:
+      navarra1: 4390.610451909495
+  hole_00074:
+    province: '31'
+    circ: navarra1
+    area_m2: 4073994.2522222446
+    border_lengths:
+      navarra1: 11015.70086233173
+  hole_00075:
+    province: '31'
+    circ: navarra1
+    area_m2: 25456.6040923534
+    border_lengths:
+      navarra1: 2145.633723426657
+  hole_00076:
+    province: '31'
+    circ: navarra1
+    area_m2: 927016.4104369773
+    border_lengths:
+      navarra1: 11516.524199203806
+  hole_00077:
+    province: '31'
+    circ: navarra1
+    area_m2: 769304.9429448134
+    border_lengths:
+      navarra1: 3953.665316520115
+  hole_00078:
+    province: '31'
+    circ: navarra1
+    area_m2: 393667.6584816873
+    border_lengths:
+      navarra1: 2823.304814295753
+  hole_00079:
+    province: '31'
+    circ: navarra1
+    area_m2: 1971221.8630844895
+    border_lengths:
+      navarra1: 7030.49945580182
+  hole_00080:
+    province: '31'
+    circ: navarra1
+    area_m2: 135151.25116663636
+    border_lengths:
+      navarra1: 1776.5485278326166
+  hole_00081:
+    province: '31'
+    circ: navarra4
+    area_m2: 55920802.80054627
+    border_lengths:
+      navarra4: 25641.883835813936
+      guipuzcoa4: 6981.53509830272
+      guipuzcoa5: 6901.992660963507
+  hole_00082:
+    province: '31'
+    circ: navarra4
+    area_m2: 1272548.7987710652
+    border_lengths:
+      navarra4: 6431.618577754672
+  hole_00083:
+    province: '31'
+    circ: navarra4
+    area_m2: 1292171.8214347558
+    border_lengths:
+      navarra4: 7746.279899183151
+      navarra1: 1135.896722777423
+  hole_00084:
+    province: '31'
+    circ: navarra4
+    area_m2: 588592.7913738448
+    border_lengths:
+      navarra4: 3822.5511491149355
+  hole_00085:
+    province: '31'
+    circ: navarra4
+    area_m2: 26897.69723695459
+    border_lengths:
+      navarra4: 994.9658951659251
+  hole_00086:
+    province: '31'
+    circ: navarra4
+    area_m2: 57077.39489588884
+    border_lengths:
+      navarra4: 1623.3081248670624
+  hole_00087:
+    province: '31'
+    circ: navarra4
+    area_m2: 424726.04724613717
+    border_lengths:
+      navarra4: 1381.843077227545
+      navarra1: 1351.925841285952
+  hole_00088:
+    province: '31'
+    circ: navarra4
+    area_m2: 52014.300134783894
+    border_lengths:
+      navarra4: 1178.772133874748
+  hole_00089:
+    province: '31'
+    circ: navarra4
+    area_m2: 2040828.9330343606
+    border_lengths:
+      navarra4: 7587.680686581478
+  hole_00090:
+    province: '31'
+    circ: navarra4
+    area_m2: 355744.5888999062
+    border_lengths:
+      navarra4: 2636.555880498376
+  hole_00091:
+    province: '31'
+    circ: navarra4
+    area_m2: 429599.0579973734
+    border_lengths:
+      navarra4: 3600.362829607263
+  hole_00092:
+    province: '31'
+    circ: navarra4
+    area_m2: 838182.5773088716
+    border_lengths:
+      navarra4: 5202.4826262409815
+  hole_00093:
+    province: '31'
+    circ: navarra5
+    area_m2: 237583.82292725987
+    border_lengths:
+      navarra5: 1121.3961400114301
+      navarra1: 806.8533548667576
+  hole_00094:
+    province: '31'
+    circ: navarra1
+    area_m2: 322074.4656243428
+    border_lengths:
+      navarra1: 1898.3597072900257
+      navarra5: 1883.420401208611
+  hole_00095:
+    province: '31'
+    circ: navarra5
+    area_m2: 23716.037118089487
+    border_lengths:
+      navarra5: 706.0564085510265
+  hole_00096:
+    province: '31'
+    circ: navarra1
+    area_m2: 75318.07366447068
+    border_lengths:
+      navarra1: 2812.4444583652153
+  hole_00097:
+    province: '31'
+    circ: navarra5
+    area_m2: 14317499.054531666
+    border_lengths:
+      navarra5: 25936.997646577005
+  hole_00098:
+    province: '31'
+    circ: navarra5
+    area_m2: 538198.8138233166
+    border_lengths:
+      navarra5: 3110.2573841507433
+  hole_00099:
+    province: '31'
+    circ: navarra5
+    area_m2: 120115.57305307554
+    border_lengths:
+      navarra5: 1535.228327885865
+  hole_00100:
+    province: '31'
+    circ: navarra5
+    area_m2: 7426562.93721684
+    border_lengths:
+      navarra5: 13014.828002414932
+  hole_00101:
+    province: '31'
+    circ: navarra5
+    area_m2: 46206.569142068285
+    border_lengths:
+      navarra5: 1138.2503392993597
+  hole_00102:
+    province: '31'
+    circ: navarra5
+    area_m2: 200237.28144770546
+    border_lengths:
+      navarra5: 2321.0149490957688
+  hole_00103:
+    province: '31'
+    circ: navarra5
+    area_m2: 75497.38608020464
+    border_lengths:
+      navarra5: 1387.9805654894303
+  hole_00104:
+    province: '31'
+    circ: navarra5
+    area_m2: 123342.0605218796
+    border_lengths:
+      navarra5: 2202.6858629258995
+  hole_00105:
+    province: '31'
+    circ: navarra5
+    area_m2: 1045967.7675859679
+    border_lengths:
+      navarra5: 4330.525133763275
+  hole_00106:
+    province: '44'
+    circ: teruel1
+    area_m2: 424228.90485134296
+    border_lengths:
+      teruel1: 3357.0602582899137
+  hole_00107:
+    province: '50'
+    circ: zaragoza6
+    area_m2: 12217383.684513729
+    border_lengths:
+      zaragoza6: 11663.993303356701
+      teruel1: 8579.801881507945
+  hole_00108:
+    province: '22'
+    circ: huesca1
+    area_m2: 9724211.538978223
+    border_lengths:
+      huesca1: 14891.079948042403
+  hole_00109:
+    province: '25'
+    circ: lleida3
+    area_m2: 22903535.708807636
+    border_lengths:
+      lleida3: 24486.873022760206
+  hole_00110:
+    province: '07'
+    circ: baleares7
+    area_m2: 3862514.80233191
+    border_lengths:
+      baleares7: 9309.472690383413
+  hole_00111:
+    province: '07'
+    circ: baleares5
+    area_m2: 13.098170651932278
+    border_lengths:
+      baleares5: 19.431210140599152
