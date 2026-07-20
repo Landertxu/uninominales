@@ -109,7 +109,7 @@ def draw_main_map(img, circ_data, project_fn):
                 ring = shp.points[parts[j]:parts[j + 1]]
                 projected = [project_fn(x, y, province) for x, y in ring]
                 if len(projected) >= 3:
-                    draw.polygon(projected, fill=color)
+                    draw.polygon(projected, fill=color, outline=color)
 
     return draw
 
