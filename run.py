@@ -25,9 +25,8 @@ from src.visualization import render_map
 
 OUTPUT_DIR = "output"
 DEFAULT_CONFIG = "configs/default.yaml"
-TEMPLATE_SHP = "data/mapas/molde/SECC_CPV_E_20111101_01_R_INE"
-CIRC_INDEX = "data/circunscripciones/index.yaml"
-DEFAULT_CIRC_DIR = "data/circunscripciones/census2011"
+
+SHAPEFILE_BASENAME = "SECC_CPV_E_20111101_01_R_INE"
 
 
 def load_config(path):
@@ -38,22 +37,29 @@ def load_config(path):
         return yaml.safe_load(f) or {}
 
 
-def pick_circ_dir(_year):
-    """Auto-pick a constituency division directory.
+def load_party_config(partidos_dir):
+    """Load the per-year party configuration.
 
-    TODO: revisit when more than one division exists. For now, default to the
-    existing 2011 census division.
+    Returns a dict. Currently supports:
+      - census_dir: path to the census dataset used by this party configuration
     """
-    if os.path.exists(DEFAULT_CIRC_DIR):
-        return DEFAULT_CIRC_DIR
-    # Fallback: if the index file exists, use the first listed division.
-    if os.path.exists(CIRC_INDEX):
-        with open(CIRC_INDEX) as f:
-            data = yaml.safe_load(f) or {}
-        if data:
-            first = next(iter(data.keys()))
-            return os.path.join("data/circunscripciones", first)
-    return None
+    config_path = os.path.join(partidos_dir, "config.yaml")
+    return load_config(config_path)
+
+
+def derive_census_paths(partidos_dir):
+    """Derive census-related paths from the party config.
+
+    Returns (census_dir, map_template, circ_dir, holes_dir).
+    """
+    party_config = load_party_config(partidos_dir)
+    census_dir = party_config.get("census_dir", "data/census/spain2011")
+
+    map_template = os.path.join(census_dir, "geographic", SHAPEFILE_BASENAME)
+    circ_dir = os.path.join(census_dir, "constituencies")
+    holes_dir = os.path.join(census_dir, "holes")
+
+    return census_dir, map_template, circ_dir, holes_dir
 
 
 def build_args():
@@ -84,6 +90,10 @@ def build_args():
     parser.add_argument(
         "--map-template", type=str,
         help="Path prefix to the template shapefile"
+    )
+    parser.add_argument(
+        "--holes-dir", type=str,
+        help="Directory containing hole-filler assignment files"
     )
     parser.add_argument(
         "--output", type=str,
@@ -123,7 +133,7 @@ def build_args():
 
     # Simple CLI overrides: if a flag was given, use it.
     for key in ["year", "votes_file", "partidos_dir", "circ_dir",
-                "map_template", "output", "method", "width", "height"]:
+                "map_template", "holes_dir", "output", "method", "width", "height"]:
         value = getattr(cli_args, key)
         if value is not None:
             config[key] = value
@@ -133,11 +143,11 @@ def build_args():
         if getattr(cli_args, key):
             config[key] = True
 
-    return config, cli_args
+    return config
 
 
 def main():
-    config, cli_args = build_args()
+    config = build_args()
 
     # Change to script directory
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -148,7 +158,22 @@ def main():
         return
 
     output_prefix = config.get("output") or os.path.join(OUTPUT_DIR, f"mapa{year}")
-    map_template = config.get("map_template") or TEMPLATE_SHP
+
+    partidos_dir = config.get("partidos_dir")
+    if not partidos_dir:
+        print("Error: --partidos-dir is required (or set in config file).")
+        return
+
+    if not os.path.isdir(partidos_dir):
+        print(f"Error: partidos directory not found: {partidos_dir}")
+        return
+
+    # Derive census-related paths from the party configuration.
+    _, default_map_template, default_circ_dir, default_holes_dir = derive_census_paths(partidos_dir)
+
+    map_template = config.get("map_template") or default_map_template
+    circ_dir = config.get("circ_dir") or default_circ_dir
+    holes_dir = config.get("holes_dir") or default_holes_dir
 
     # Viz-only mode: just render from existing shapefile
     if config.get("viz_only"):
@@ -169,18 +194,6 @@ def main():
     if not votes_file:
         print("Error: --votes-file is required (or set in config file).")
         return
-
-    partidos_dir = config.get("partidos_dir")
-    if not partidos_dir:
-        print("Error: --partidos-dir is required (or set in config file).")
-        return
-
-    circ_dir = config.get("circ_dir")
-    if not circ_dir:
-        circ_dir = pick_circ_dir(year)
-        if not circ_dir:
-            print("Error: no constituency division found and --circ-dir not given.")
-            return
 
     method = config.get("method", "transfer")
 
@@ -205,7 +218,14 @@ def main():
         print("Step 2: Generating output shapefile")
         print("=" * 60)
         os.makedirs(os.path.dirname(output_prefix) or OUTPUT_DIR, exist_ok=True)
-        generate_shapefile(map_template, output_prefix, winners, valid, invalid)
+        generate_shapefile(
+            map_template,
+            output_prefix,
+            winners,
+            valid,
+            invalid,
+            holes_dir=holes_dir,
+        )
         print(f"Shapefile saved to {output_prefix}.shp")
 
         # Step 3: Render map

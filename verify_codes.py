@@ -111,6 +111,15 @@ def load_year_config(year):
         return yaml.safe_load(f)
 
 
+def load_party_config(partidos_dir):
+    """Load the per-year party configuration."""
+    config_path = os.path.join(partidos_dir, "config.yaml")
+    if not os.path.exists(config_path):
+        return {}
+    with open(config_path) as f:
+        return yaml.safe_load(f) or {}
+
+
 def main():
     years = sys.argv[1:] if len(sys.argv) > 1 else ["2008", "2011", "2015", "2016", "2019a", "2019b"]
     total_issues = 0
@@ -127,7 +136,10 @@ def main():
 
         votes_file = config.get("votes_file")
         partidos_dir = config.get("partidos_dir")
-        circ_dir = config.get("circ_dir", "data/circunscripciones/census2011")
+
+        party_config = load_party_config(partidos_dir)
+        census_dir = party_config.get("census_dir", "data/census/spain2011")
+        circ_dir = os.path.join(census_dir, "constituencies")
 
         issues = verify_year(year, votes_file, partidos_dir, circ_dir)
         if issues:

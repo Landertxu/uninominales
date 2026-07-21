@@ -18,12 +18,20 @@ def _run_simulation_for_year(year):
     with open(config_path) as f:
         config = yaml.safe_load(f)
 
-    # Default constituency directory if not specified in config.
-    circ_dir = config.get("circ_dir", "data/circunscripciones/census2011")
+    partidos_dir = config["partidos_dir"]
+    party_config_path = PROJECT_ROOT / partidos_dir / "config.yaml"
+    if party_config_path.exists():
+        with open(party_config_path) as f:
+            party_config = yaml.safe_load(f)
+    else:
+        party_config = {}
+
+    census_dir = party_config.get("census_dir", "data/census/spain2011")
+    circ_dir = os.path.join(census_dir, "constituencies")
 
     return run_simulation(
         votes_file=config["votes_file"],
-        partidos_dir=config["partidos_dir"],
+        partidos_dir=partidos_dir,
         circ_dir=circ_dir,
         method=config.get("method", "transfer"),
     )

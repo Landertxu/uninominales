@@ -50,7 +50,6 @@ python3 run.py \
   --year 2019a \
   --votes-file data/raw/2019a/10021904.DAT \
   --partidos-dir data/partidos/2019a \
-  --map-template data/mapas/molde/SECC_CPV_E_20111101_01_R_INE \
   --output output/mapa2019a
 
 # Skip map rendering (generate shapefile only)
@@ -95,18 +94,21 @@ uninominales/
 │       ├── canarias.py       # Canary Islands relocation
 │       ├── insets.py         # Madrid / Barcelona inset maps
 │       └── connections.py    # Island connection boxes
-├── configs/                  # Per-year configuration files
+├── configs/                  # Per-year run configuration files
 │   ├── default.yaml          # Default run configuration (2015)
 │   ├── 2008.yaml             # 2008 election
 │   ├── 2011.yaml             # 2011 election
+│   ├── 2015.yaml             # 2015 election
 │   ├── 2016.yaml             # 2016 election
 │   ├── 2019a.yaml            # April 2019 election
 │   └── 2019b.yaml            # November 2019 election
 ├── data/
 │   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
-│   ├── circunscripciones/    # Constituency definitions
-│   │   ├── index.yaml        # Division index
-│   │   └── census2011/       # 52 province constituency definitions
+│   ├── census/               # Census geography and derived constituency data
+│   │   └── spain2011/        # Spain 2011 census
+│   │       ├── geographic/   # Census-section shapefile
+│   │       ├── constituencies/ # Province constituency definitions
+│   │       └── holes/        # Hole-filler assignments for this census
 │   ├── partidos/             # Party YAML files
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008
@@ -115,8 +117,7 @@ uninominales/
 │   │   ├── 2016/             # Per-region files for 2016
 │   │   ├── 2019a/            # Per-region files for April 2019
 │   │   └── 2019b/            # Per-region files for November 2019
-│   ├── regions.dat           # Province code → region name mapping
-│   └── mapas/molde/          # Template census-section shapefile
+│   └── regions.dat           # Province code → region name mapping
 ├── output/                   # Generated shapefiles and PNG maps
 ├── images/                   # README images
 ├── tests/                    # Test suite

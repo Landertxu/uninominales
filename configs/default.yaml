@@ -1,7 +1,6 @@
 year: "2015"
 votes_file: "data/raw/2015/10021215.DAT"
 partidos_dir: "data/partidos/2015"
-map_template: "data/mapas/molde/SECC_CPV_E_20111101_01_R_INE"
 output: "output/mapa2015"
 method: "transfer"
 width: 1100

@@ -57,12 +57,13 @@ pytest --regenerate-golden
 
 - `configs/*.yaml` — Per-year run configurations and default config
 - `data/raw/YYYY/*.DAT` — INE election data (large files, ~25 MB each)
-- `data/circunscripciones/index.yaml` — Constituency division index
-- `data/circunscripciones/census2011/circXX.dat` — 52 province constituency definitions
+- `data/census/spain2011/geographic/` — Census-section shapefile
+- `data/census/spain2011/constituencies/` — 52 province constituency definitions
+- `data/census/spain2011/holes/` — Hole-filler assignments for this census
 - `data/partidos/parties.yaml` — Central party metadata (names, colors)
+- `data/partidos/YYYY/config.yaml` — Per-year party configuration, references a census
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
 - `data/regions.dat` — Province code → region name mapping
-- `data/mapas/molde/` — Template census-section shapefile
 
 ## Party YAML format
 
@@ -85,7 +86,9 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 ## Adding a new election year
 
 1. Place the INE DAT file in `data/raw/YYYY/`
-2. Create `data/partidos/YYYY/` with per-region YAML files
+2. Create `data/partidos/YYYY/` with:
+   - `config.yaml` referencing the census dataset (e.g. `census_dir: data/census/spain2011`)
+   - per-region YAML files (`and.yaml`, `esp.yaml`, etc.)
 3. Create `configs/YYYY.yaml` pointing to the DAT file and party directory
 4. Verify party codes against the INE candidatura file for that year
 5. Run `python3 run.py --config configs/YYYY.yaml` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
@@ -94,6 +97,6 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 
 - `run.py` does `os.chdir()` to its own directory — all paths are relative to project root
 - Province code = first 2 digits of mesa (census section) code
-- The template shapefile (`data/mapas/molde/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
+- The template shapefile (`data/census/spain2011/geographic/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
 - Party code mappings vary by region — a code in Madrid may not exist in Galicia
 - Transfer fractions should sum to ≤1.0 (unallocated fraction stays with the eliminated party as "lost")
