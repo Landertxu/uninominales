@@ -16,42 +16,58 @@ source env/bin/activate
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run complete workflow (parse data + simulate + generate map)
+# 3. Run complete workflow using the default config
 python3 run.py
 
-# Or specify a year
-python3 run.py --year 2015
+# Or use a per-year config
+python3 run.py --config configs/2019a.yaml
 ```
 
-### Available years
+### Available configs
 
-| Year | Flag | Notes |
-|------|------|-------|
-| 2008 | `--year 2008` | |
-| 2011 | `--year 2011` | |
-| 2015 | `--year 2015` | Default |
-| 2016 | `--year 2016` | |
-| 2019 (April) | `--year 2019a` | |
-| 2019 (November) | `--year 2019b` | |
+| Year | Config | Notes |
+|------|--------|-------|
+| 2008 | `--config configs/2008.yaml` | |
+| 2011 | `--config configs/2011.yaml` | |
+| 2015 | `--config configs/2015.yaml` | Default |
+| 2016 | `--config configs/2016.yaml` | |
+| 2019 (April) | `--config configs/2019a.yaml` | |
+| 2019 (November) | `--config configs/2019b.yaml` | |
 
 ### Workflow options
 
+All options can be set in the config file or overridden on the command line.
+
 ```bash
+# Use a config file
+python3 run.py --config configs/2019a.yaml
+
+# Override specific values
+python3 run.py --config configs/2019a.yaml --method plurality
+
+# Provide everything explicitly (no config file)
+python3 run.py \
+  --year 2019a \
+  --votes-file data/raw/2019a/10021904.DAT \
+  --partidos-dir data/partidos/2019a \
+  --map-template data/mapas/molde/SECC_CPV_E_20111101_01_R_INE \
+  --output output/mapa2019a
+
 # Skip map rendering (generate shapefile only)
-python3 run.py --skip-map
+python3 run.py --config configs/2015.yaml --skip-map
 
 # Don't generate shapefile (print results only)
-python3 run.py --no-map
+python3 run.py --config configs/2015.yaml --no-map
 
 # Just render the map from an existing shapefile (fast)
-python3 run.py --viz-only
+python3 run.py --config configs/2015.yaml --viz-only
 
 # Simulation method: 'transfer' (two-round with vote transfer) or
 # 'plurality' (simple FPTP, no transfers). Default: transfer
-python3 run.py --method plurality
+python3 run.py --config configs/2015.yaml --method plurality
 
 # Customize map dimensions
-python3 run.py --width 1200 --height 1000
+python3 run.py --config configs/2015.yaml --width 1200 --height 1000
 ```
 
 ## Downloading election data
@@ -79,9 +95,18 @@ uninominales/
 │       ├── canarias.py       # Canary Islands relocation
 │       ├── insets.py         # Madrid / Barcelona inset maps
 │       └── connections.py    # Island connection boxes
+├── configs/                  # Per-year configuration files
+│   ├── default.yaml          # Default run configuration (2015)
+│   ├── 2008.yaml             # 2008 election
+│   ├── 2011.yaml             # 2011 election
+│   ├── 2016.yaml             # 2016 election
+│   ├── 2019a.yaml            # April 2019 election
+│   └── 2019b.yaml            # November 2019 election
 ├── data/
 │   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
-│   ├── circunscripciones/    # 52 province constituency definitions
+│   ├── circunscripciones/    # Constituency definitions
+│   │   ├── index.yaml        # Division index
+│   │   └── census2011/       # 52 province constituency definitions
 │   ├── partidos/             # Party YAML files
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008

@@ -1,0 +1,7 @@
+# Constituency division index.
+# Maps division name -> census year and description.
+# run.py uses this to auto-pick a division when --circ-dir is not given.
+# TODO: revisit autopick logic when a second division is added.
+census2011:
+  year: 2011
+  description: "INE 2011 census sections"

@@ -3,6 +3,7 @@
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -15,9 +16,10 @@ OUTPUT_DIR = PROJECT_ROOT / "output"
 
 
 def _generate_png(year):
-    """Generate the PNG for a year by invoking run.py."""
+    """Generate the PNG for a year by invoking run.py with the per-year config."""
+    config_path = PROJECT_ROOT / "configs" / f"{year}.yaml"
     result = subprocess.run(
-        ["python3", "run.py", "--year", year],
+        [sys.executable, "run.py", "--config", str(config_path)],
         cwd=PROJECT_ROOT,
         capture_output=True,
         text=True,

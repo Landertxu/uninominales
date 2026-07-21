@@ -15,15 +15,6 @@ from .constituency_parser import parse_constituency_file
 from .simulation import simulate_winner, simulate_plurality
 
 
-# Election years and their raw data file paths (relative to project root)
-YEARS = {
-    "2008": "data/raw/2008/10020803.DAT",
-    "2011": "data/raw/2011/10021111.DAT",
-    "2015": "data/raw/2015/10021215.DAT",
-    "2016": "data/raw/2016/10021606.DAT",
-    "2019a": "data/raw/2019a/10021904.DAT",
-    "2019b": "data/raw/2019b/10021911.DAT",
-}
 
 
 @dataclass
@@ -56,14 +47,11 @@ def load_region_map(regions_path="data/regions.dat"):
     return mapping
 
 
-def find_party_file(region_name, year):
-    """Find the party file for a region and year.
+def find_party_file(region_name, year_dir):
+    """Find the party file for a region under a given per-year party directory.
 
-    Looks in data/partidos/{year}/{region}.yaml
-    Falls back to data/partidos/{year}/esp.yaml if not found.
+    Looks in year_dir/{region}.yaml and falls back to year_dir/esp.yaml.
     """
-    partidos_dir = os.path.join("data", "partidos")
-    year_dir = os.path.join(partidos_dir, str(year))
     candidates = [
         os.path.join(year_dir, f"{region_name}.yaml"),
         os.path.join(year_dir, "esp.yaml"),
@@ -74,13 +62,12 @@ def find_party_file(region_name, year):
     return None
 
 
-def load_year_data(year):
-    """Load all vote data for a year into memory from the raw DAT file.
+def load_year_data(path):
+    """Load all vote data for a raw DAT file into memory.
 
     Returns a YearData object with raw mesa-level data and a sorted list
     of all mesa codes for fast prefix-based queries.
     """
-    path = YEARS.get(year)
     if not path or not os.path.exists(path):
         return YearData(raw={}, sorted_mesas=[])
     data = {}
@@ -131,12 +118,13 @@ def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
     return dict(votes)
 
 
-def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
-    """Run the FPTP simulation for a given year.
+def run_simulation(votes_file, partidos_dir, circ_dir, method="transfer"):
+    """Run the FPTP simulation for a given dataset.
 
     Args:
-        year: Election year
-        circ_dir: Directory containing province constituency definitions (flat)
+        votes_file: Path to the INE type-10 DAT file
+        partidos_dir: Directory containing per-year, per-region party YAML files
+        circ_dir: Directory containing province constituency definitions
         method: Simulation method - 'transfer' (two-round with vote transfer) or
                 'plurality' (simple FPTP, no transfers)
 
@@ -148,10 +136,10 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
     # Load province -> region mapping
     region_map = load_region_map()
 
-    # Load vote data for the year from raw DAT file
-    year_data = load_year_data(year)
+    # Load vote data from raw DAT file
+    year_data = load_year_data(votes_file)
     if not year_data:
-        print(f"[ERROR] No data found for year {year}")
+        print(f"[ERROR] No data found in {votes_file}")
         return {}, {}, {}
 
     # Get available provinces from loaded data
@@ -186,9 +174,9 @@ def run_simulation(year, circ_dir="data/circunscripciones", method="transfer"):
         provinces = region_provinces[region_name]
 
         # Find party file
-        party_file = find_party_file(region_name, year)
+        party_file = find_party_file(region_name, partidos_dir)
         if party_file is None:
-            print(f"[SKIP] No party file found for {region_name} year {year}")
+            print(f"[SKIP] No party file found for {region_name} in {partidos_dir}")
             continue
 
         codes, transfers = read_party_file(party_file)

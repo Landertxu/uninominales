@@ -1,0 +1,10 @@
+year: "2016"
+votes_file: "data/raw/2016/10021606.DAT"
+partidos_dir: "data/partidos/2016"
+map_template: "data/mapas/molde/SECC_CPV_E_20111101_01_R_INE"
+output: "output/mapa2016"
+method: "transfer"
+width: 1100
+height: 900
+skip_map: false
+no_map: false

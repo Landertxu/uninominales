@@ -10,21 +10,37 @@ Spanish election simulator (FPTP/uninominales) using INE DAT files. Python 3, no
 
 ```bash
 # Always run from uninominales/
-python3 run.py                          # Default: 2015, transfer method
-python3 run.py --year 2016              # Specify year (string, not int)
-python3 run.py --year 2019a             # April 2019 election
-python3 run.py --year 2019b             # November 2019 election
-python3 run.py --method plurality       # Simple FPTP without vote transfers
-python3 run.py --viz-only               # Re-render map from existing shapefile
-python3 run.py --skip-map               # Generate shapefile but skip PNG
-python3 run.py --no-map                 # Print results only
+python3 run.py                                  # Default: configs/default.yaml (2015)
+python3 run.py --config configs/2016.yaml       # Use a per-year config
+python3 run.py --config configs/2019a.yaml      # April 2019 election
+python3 run.py --config configs/2019b.yaml      # November 2019 election
+python3 run.py --method plurality               # Simple FPTP without vote transfers
+python3 run.py --viz-only                       # Re-render map from existing shapefile
+python3 run.py --skip-map                       # Generate shapefile but skip PNG
+python3 run.py --no-map                         # Print results only
+
+# Fully explicit invocation (no config file)
+python3 run.py \
+  --year 2019a \
+  --votes-file data/raw/2019a/10021904.DAT \
+  --partidos-dir data/partidos/2019a \
+  --output output/mapa2019a
 ```
 
 **Important:** `--year` is a string. 2019 has two elections: `2019a` (April) and `2019b` (November). Single-election years: `2008`, `2011`, `2015`, `2016`.
 
-## No test suite
+## Testing
 
-There are no tests. Verify changes by running the full pipeline and comparing output (seat counts, map visuals). The original project's outputs in `output/` serve as reference.
+```bash
+# Fast tests (unit + regression)
+pytest
+
+# Slow tests (golden PNG comparison, ~2 min)
+pytest --runslow
+
+# Regenerate golden images after intentional changes
+pytest --regenerate-golden
+```
 
 ## Key architecture
 
@@ -39,8 +55,10 @@ There are no tests. Verify changes by running the full pipeline and comparing ou
 
 ## Data layout
 
+- `configs/*.yaml` — Per-year run configurations and default config
 - `data/raw/YYYY/*.DAT` — INE election data (large files, ~25 MB each)
-- `data/circunscripciones/circXX.dat` — 52 province constituency definitions
+- `data/circunscripciones/index.yaml` — Constituency division index
+- `data/circunscripciones/census2011/circXX.dat` — 52 province constituency definitions
 - `data/partidos/parties.yaml` — Central party metadata (names, colors)
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
 - `data/regions.dat` — Province code → region name mapping
@@ -67,10 +85,10 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 ## Adding a new election year
 
 1. Place the INE DAT file in `data/raw/YYYY/`
-2. Add the year to `YEARS` dict in `src/election_runner.py`
-3. Create `data/partidos/YYYY/` with per-region YAML files
+2. Create `data/partidos/YYYY/` with per-region YAML files
+3. Create `configs/YYYY.yaml` pointing to the DAT file and party directory
 4. Verify party codes against the INE candidatura file for that year
-5. Run `python3 run.py --year YYYY` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
+5. Run `python3 run.py --config configs/YYYY.yaml` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
 
 ## Gotchas
 
