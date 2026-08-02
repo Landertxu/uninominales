@@ -1,0 +1,41 @@
+# Party colors for April 2019 election
+
+PP:
+  name: "Partido Popular"
+  color: "#1E88E5"
+
+PSOE:
+  name: "Partido Socialista Obrero Español"
+  color: "#E53935"
+
+ERC:
+  name: "Esquerra Republicana de Catalunya"
+  color: "#FFD600"
+
+C's:
+  name: "Ciudadanos"
+  color: "#FB8C00"
+
+PNV:
+  name: "Partido Nacionalista Vasco"
+  color: "#2E7D32"
+
+EHB:
+  name: "Euskal Herria Bildu"
+  color: "#00796B"
+
+CCa:
+  name: "Coalición Canaria"
+  color: "#00ACC1"
+
+JxCAT:
+  name: "Junts per Catalunya"
+  color: "#37474F"
+
+ECP:
+  name: "En Comú Podem"
+  color: "#AD1457"
+
+R:
+  name: "Resto"
+  color: "#BDBDBD"

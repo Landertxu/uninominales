@@ -2,9 +2,9 @@
 
 Simulates Spanish general elections using first-past-the-post (uninominales) districts with official INE data.
 
-![2019 April election map](images/mapa2019a.png)
+![2019 November election map](images/mapa2019b.png)
 
-*Simulated result of the April 2019 election — 35 constituencies, 350 seats*
+*Simulated result of the November 2019 election — 35 constituencies, 350 seats*
 
 ## Quick Start
 

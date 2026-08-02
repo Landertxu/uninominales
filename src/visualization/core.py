@@ -4,7 +4,7 @@ import random
 from collections import defaultdict
 from PIL import Image, ImageDraw
 
-from .config import PARTY_COLORS, DEFAULT_COLOR, BG_COLOR, BORDER_COLOR
+from .config import DEFAULT_COLOR, BG_COLOR, BORDER_COLOR
 
 
 def get_bbox(shapes_iter):
@@ -25,8 +25,10 @@ def group_by_circ(sf):
     Returns circ_data dict mapping circ -> {"shapes": [(shp, province)], "partido": str}
     """
     # Find the CUSEC field index by name
+    # Note: sf.fields includes DeletionFlag at index 0, but records don't include it
+    # So we need to subtract 1 from the field index to get the record index
     field_names = [field[0] for field in sf.fields]
-    cusec_idx = field_names.index("CUSEC")
+    cusec_idx = field_names.index("CUSEC") - 1
     
     circ_data = defaultdict(lambda: {"shapes": [], "partido": "0"})
     for shp, rec in zip(sf.iterShapes(), sf.records()):
@@ -101,12 +103,12 @@ def draw_constituencies(img, circ_data, circ_colors, project_fn):
     return circ_img
 
 
-def draw_main_map(img, circ_data, project_fn):
+def draw_main_map(img, circ_data, project_fn, party_colors):
     """Draw constituencies with party colors."""
     draw = ImageDraw.Draw(img)
 
     for circ, data in circ_data.items():
-        color = PARTY_COLORS.get(data["partido"], DEFAULT_COLOR)
+        color = party_colors.get(data["partido"], DEFAULT_COLOR)
         for shp, province in data["shapes"]:
             parts = list(shp.parts) + [len(shp.points)]
             for j in range(len(parts) - 1):
@@ -124,12 +126,12 @@ def apply_borders(img, border_mask):
         img.putpixel((px, py), BORDER_COLOR)
 
 
-def draw_legend(draw, rep_counts, width, height, padding, font):
+def draw_legend(draw, rep_counts, width, height, padding, font, party_colors):
     """Draw the party legend at the bottom of the image."""
     legend_y = height - 45
     legend_x = padding
     for party, count in sorted(rep_counts.items(), key=lambda x: -x[1]):
-        color = PARTY_COLORS.get(party, DEFAULT_COLOR)
+        color = party_colors.get(party, DEFAULT_COLOR)
         draw.rectangle([legend_x, legend_y, legend_x + 14, legend_y + 14],
                        fill=color, outline=(0, 0, 0))
         text = f"{party}: {count}"

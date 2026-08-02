@@ -10,22 +10,30 @@ def _hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
 
-def _load_party_colors():
-    """Load party colors from central YAML file."""
-    path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "partidos", "parties.yaml")
-    try:
-        with open(path) as f:
-            data = yaml.safe_load(f)
-        colors = {}
-        for name, info in data.items():
-            hex_color = info.get("color", "#B4B4B4")
-            colors[name] = _hex_to_rgb(hex_color)
-        return colors
-    except FileNotFoundError:
-        return {}
-
-
-PARTY_COLORS = _load_party_colors()
+def load_party_colors(election):
+    """Load party colors for a specific election.
+    
+    Args:
+        election: Election identifier (e.g., '2015', '2019a', '2019b')
+        
+    Returns:
+        dict mapping party code to RGB color tuple
+        
+    Raises:
+        FileNotFoundError: If colors file doesn't exist for this election
+    """
+    path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "partidos", "colors", f"{election}.yaml")
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Party colors file not found: {path}")
+    
+    with open(path) as f:
+        data = yaml.safe_load(f)
+    
+    colors = {}
+    for name, info in data.items():
+        hex_color = info.get("color", "#B4B4B4")
+        colors[name] = _hex_to_rgb(hex_color)
+    return colors
 
 DEFAULT_COLOR = (200, 200, 200)
 BG_COLOR = (255, 255, 255)

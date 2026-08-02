@@ -1,0 +1,33 @@
+# Party colors for 2015 election
+
+PP:
+  name: "Partido Popular"
+  color: "#1E88E5"
+
+PSOE:
+  name: "Partido Socialista Obrero Español"
+  color: "#E53935"
+
+P's:
+  name: "Podemos"
+  color: "#8E24AA"
+
+C's:
+  name: "Ciudadanos"
+  color: "#FB8C00"
+
+ERC:
+  name: "Esquerra Republicana de Catalunya"
+  color: "#FFD600"
+
+PNV:
+  name: "Partido Nacionalista Vasco"
+  color: "#2E7D32"
+
+DL:
+  name: "Democràcia i Llibertat"
+  color: "#7E57C2"
+
+R:
+  name: "Resto"
+  color: "#BDBDBD"

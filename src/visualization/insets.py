@@ -2,7 +2,7 @@
 
 from PIL import Image, ImageDraw
 
-from .config import (PARTY_COLORS, DEFAULT_COLOR, BG_COLOR, BORDER_COLOR,
+from .config import (DEFAULT_COLOR, BG_COLOR, BORDER_COLOR,
                      INSET_BORDER_COLOR, INSETS, CANARIAS_PROVS)
 from .core import get_bbox
 
@@ -18,7 +18,7 @@ def make_inset_project(bb_xmin, bb_ymin, inset_scale, inset_offset_x,
 
 
 def render_inset(circ_data, circ_colors, prov_code, bb_xmin, bb_ymin,
-                 bb_w, bb_h, inset_w, inset_h):
+                 bb_w, bb_h, inset_w, inset_h, party_colors):
     """Render an inset map for a specific province.
 
     Returns the inset image.
@@ -35,7 +35,7 @@ def render_inset(circ_data, circ_colors, prov_code, bb_xmin, bb_ymin,
     inset_draw = ImageDraw.Draw(inset_img)
 
     for circ, data in circ_data.items():
-        color = PARTY_COLORS.get(data["partido"], DEFAULT_COLOR)
+        color = party_colors.get(data["partido"], DEFAULT_COLOR)
         for shp, province in data["shapes"]:
             if province != prov_code:
                 continue
@@ -77,7 +77,7 @@ def render_inset(circ_data, circ_colors, prov_code, bb_xmin, bb_ymin,
 
 
 def draw_insets(main_img, draw, circ_data, circ_colors, project_fn,
-                width, height, padding, top_margin=120):
+                width, height, padding, top_margin, party_colors):
     """Draw all configured inset maps onto the main image.
 
     Also draws extent squares and connector lines.
@@ -164,7 +164,7 @@ def draw_insets(main_img, draw, circ_data, circ_colors, project_fn,
         # Render the inset
         inset_img = render_inset(circ_data, circ_colors, prov_code,
                                  bb_xmin, bb_ymin, bb_w, bb_h,
-                                 inset_w, inset_h)
+                                 inset_w, inset_h, party_colors)
 
         # Draw border rectangle around inset
         inset_draw_final = ImageDraw.Draw(inset_img)
