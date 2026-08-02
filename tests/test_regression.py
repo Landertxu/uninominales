@@ -19,15 +19,8 @@ def _run_simulation_for_year(year):
         config = yaml.safe_load(f)
 
     partidos_dir = config["partidos_dir"]
-    party_config_path = PROJECT_ROOT / partidos_dir / "config.yaml"
-    if party_config_path.exists():
-        with open(party_config_path) as f:
-            party_config = yaml.safe_load(f)
-    else:
-        party_config = {}
-
-    census_dir = party_config.get("census_dir", "data/census/spain2011")
-    circ_dir = os.path.join(census_dir, "constituencies")
+    geographic_dir = config["geographic_dir"]
+    circ_dir = os.path.join(geographic_dir, "constituencies")
 
     return run_simulation(
         votes_file=config["votes_file"],

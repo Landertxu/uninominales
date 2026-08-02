@@ -45,25 +45,15 @@ def load_party_config(partidos_dir):
     return load_config(config_path)
 
 
-def derive_census_paths(partidos_dir):
-    """Derive census-related paths from the party config.
-
-    Returns (census_dir, circ_dir).
-    """
-    party_config = load_party_config(partidos_dir)
-    census_dir = party_config.get("census_dir", "data/census/spain2011")
-    circ_dir = os.path.join(census_dir, "constituencies")
-    return census_dir, circ_dir
-
-
 def derive_geographic_paths(geographic_dir):
     """Derive geographic-related paths from the geographic directory.
 
-    Returns (map_template, holes_dir).
+    Returns (map_template, holes_dir, circ_dir).
     Auto-detects .shp file in {geographic_dir}/geographic/
     """
     geographic_subdir = os.path.join(geographic_dir, "geographic")
     holes_dir = os.path.join(geographic_dir, "holes")
+    circ_dir = os.path.join(geographic_dir, "constituencies")
 
     # Auto-detect .shp file
     map_template = None
@@ -74,7 +64,7 @@ def derive_geographic_paths(geographic_dir):
                 map_template = os.path.join(geographic_subdir, fname[:-4])
                 break
 
-    return map_template, holes_dir
+    return map_template, holes_dir, circ_dir
 
 
 def build_args():
@@ -198,35 +188,29 @@ def main():
         print(f"Error: partidos directory not found: {partidos_dir}")
         return
 
-    # Derive census-related paths from the party configuration.
-    _, default_circ_dir = derive_census_paths(partidos_dir)
-    circ_dir = config.get("circ_dir") or default_circ_dir
-
     # Get map mode
     map_mode = config.get("map", "png")
 
-    # Derive geographic paths if map generation is enabled
-    default_map_template = None
-    default_holes_dir = None
-    if map_mode != "none":
-        geographic_dir = config.get("geographic_dir")
-        if not geographic_dir:
-            print("Error: --geographic-dir is required when map generation is enabled (or set in config file).")
-            return
+    # Derive geographic paths
+    geographic_dir = config.get("geographic_dir")
+    if not geographic_dir:
+        print("Error: --geographic-dir is required (or set in config file).")
+        return
 
-        if not os.path.isdir(geographic_dir):
-            print(f"Error: geographic directory not found: {geographic_dir}")
-            return
+    if not os.path.isdir(geographic_dir):
+        print(f"Error: geographic directory not found: {geographic_dir}")
+        return
 
-        default_map_template, default_holes_dir = derive_geographic_paths(geographic_dir)
+    default_map_template, default_holes_dir, default_circ_dir = derive_geographic_paths(geographic_dir)
 
-        # Validate that we found a shapefile
-        if not default_map_template:
-            print(f"Error: no .shp file found in {geographic_dir}/geographic/")
-            return
+    # Validate that we found a shapefile
+    if not default_map_template:
+        print(f"Error: no .shp file found in {geographic_dir}/geographic/")
+        return
 
     map_template = config.get("map_template") or default_map_template
     holes_dir = config.get("holes_dir") or default_holes_dir
+    circ_dir = config.get("circ_dir") or default_circ_dir
 
     # Viz-only mode: just render from existing shapefile
     if config.get("viz_only"):
@@ -238,6 +222,7 @@ def main():
         render_map(
             shp_path,
             img_path,
+            election=year,
             width=config.get("width", 1100),
             height=config.get("height", 900),
         )
@@ -290,6 +275,7 @@ def main():
             render_map(
                 f"{output_prefix}.shp",
                 img_path,
+                election=year,
                 width=config.get("width", 1100),
                 height=config.get("height", 900),
             )

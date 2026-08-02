@@ -1,0 +1,25 @@
+# Party colors for 2008 election
+
+PP:
+  name: "Partido Popular"
+  color: "#1E88E5"
+
+PSOE:
+  name: "Partido Socialista Obrero Español"
+  color: "#E53935"
+
+PNV:
+  name: "Partido Nacionalista Vasco"
+  color: "#2E7D32"
+
+CC:
+  name: "Coalición Canaria"
+  color: "#00ACC1"
+
+CiU:
+  name: "Convergència i Unió"
+  color: "#1565C0"
+
+R:
+  name: "Resto"
+  color: "#BDBDBD"

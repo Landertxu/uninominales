@@ -12,7 +12,7 @@ from PIL import Image, ImageFont
 import shapefile
 
 from .config import (BG_COLOR, BORDER_COLOR, CANARIAS_PROVS,
-                     INSET_BORDER_COLOR, INSETS)
+                     INSET_BORDER_COLOR, INSETS, load_party_colors)
 from .core import (get_bbox, group_by_circ, count_representatives,
                    assign_unique_colors, draw_constituencies, detect_borders,
                    draw_main_map, apply_borders, draw_legend)
@@ -22,16 +22,20 @@ from .insets import draw_insets
 from .connections import draw_connection_lines
 
 
-def render_map(shapefile_path, output_path, width=1100, height=900, padding=15):
+def render_map(shapefile_path, output_path, election, width=1100, height=900, padding=15):
     """Render an election shapefile to a PNG image.
 
     Args:
         shapefile_path: Path to the input .shp file
         output_path: Path for the output PNG file
+        election: Election identifier (e.g., '2015', '2019a', '2019b')
         width: Image width in pixels
         height: Image height in pixels
         padding: Padding around the map in pixels
     """
+    # Load party colors for this election
+    party_colors = load_party_colors(election)
+    
     sf = shapefile.Reader(shapefile_path, encoding="latin-1")
 
     # Separate mainland and Canary Islands
@@ -87,7 +91,7 @@ def render_map(shapefile_path, output_path, width=1100, height=900, padding=15):
 
     # Draw final image with party colors
     img = Image.new("RGB", (width, height), BG_COLOR)
-    draw = draw_main_map(img, circ_data, project)
+    draw = draw_main_map(img, circ_data, project, party_colors)
     apply_borders(img, border_mask)
 
     # Draw Canary Islands rectangle
@@ -98,7 +102,7 @@ def render_map(shapefile_path, output_path, width=1100, height=900, padding=15):
 
     # Draw inset maps
     draw_insets(img, draw, circ_data, circ_colors, project,
-                width, height, padding, top_margin)
+                width, height, padding, top_margin, party_colors)
 
     # Load font
     try:
@@ -107,7 +111,7 @@ def render_map(shapefile_path, output_path, width=1100, height=900, padding=15):
         font = ImageFont.load_default()
 
     # Draw legend
-    draw_legend(draw, rep_counts, width, height, padding, font)
+    draw_legend(draw, rep_counts, width, height, padding, font, party_colors)
 
     img.save(output_path)
     print(f"Saved to {output_path}")

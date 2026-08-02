@@ -26,6 +26,16 @@ data/geographic/*/geographic/*.shx
 data/geographic/*/geographic/*.sbn
 data/geographic/*/geographic/*.sbx
 
+# Generated shapefiles and maps (large binary files)
+images/mapa*.shp
+images/mapa*.dbf
+images/mapa*.shx
+images/mapa*.prj
+output/mapa*.shp
+output/mapa*.dbf
+output/mapa*.shx
+output/mapa*.prj
+
 # Raw census data
 data/census/*/raw/
 

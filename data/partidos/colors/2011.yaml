@@ -1,0 +1,25 @@
+# Party colors for 2011 election
+
+PP:
+  name: "Partido Popular"
+  color: "#1E88E5"
+
+PSOE:
+  name: "Partido Socialista Obrero Español"
+  color: "#E53935"
+
+CiU:
+  name: "Convergència i Unió"
+  color: "#1565C0"
+
+PNV:
+  name: "Partido Nacionalista Vasco"
+  color: "#2E7D32"
+
+AMA:
+  name: "Amaiur"
+  color: "#6A1B9A"
+
+R:
+  name: "Resto"
+  color: "#BDBDBD"

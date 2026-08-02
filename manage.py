@@ -32,7 +32,7 @@ def load_population_data(csv_path):
     return population_data
 
 
-def load_all_constituencies(census_dir):
+def load_all_constituencies(geographic_dir):
     """
     Load all constituency definitions from circXX.dat files.
     
@@ -40,7 +40,7 @@ def load_all_constituencies(census_dir):
         list: List of (constituency_name, inclusion_codes, exclusion_codes, province_code) tuples
     """
     constituencies = []
-    constituencies_path = Path(census_dir) / 'constituencies'
+    constituencies_path = Path(geographic_dir) / 'constituencies'
     
     if not constituencies_path.exists():
         raise FileNotFoundError(f"Constituencies directory not found: {constituencies_path}")
@@ -155,6 +155,7 @@ def check_constituencies(args):
     Validate constituency definitions against population data.
     """
     census_dir = args.census_dir
+    geographic_dir = args.geographic_dir
     population_file = args.population_file
     
     # Determine population file path
@@ -170,7 +171,7 @@ def check_constituencies(args):
         print(f"Error: Population file not found: {population_file}")
         sys.exit(1)
     
-    constituencies_path = Path(census_dir) / 'constituencies'
+    constituencies_path = Path(geographic_dir) / 'constituencies'
     if not constituencies_path.exists():
         print(f"Error: Constituencies directory not found: {constituencies_path}")
         sys.exit(1)
@@ -181,7 +182,7 @@ def check_constituencies(args):
     print(f"Total sections in population data: {len(population_data):,}")
     
     print(f"\nLoading constituency definitions from: {constituencies_path}")
-    constituencies = load_all_constituencies(census_dir)
+    constituencies = load_all_constituencies(geographic_dir)
     print(f"Total constituencies: {len(constituencies)}")
     
     # Assign sections to constituencies
@@ -197,6 +198,7 @@ def check_constituencies(args):
     print("=== Constituency Validation Report ===")
     print("=" * 60)
     print(f"Census: {census_dir}")
+    print(f"Geographic: {geographic_dir}")
     print(f"Population file: {population_file}")
     print(f"Total sections in population data: {len(population_data):,}")
     
@@ -253,6 +255,7 @@ def population_stats(args):
     Show population statistics for constituencies.
     """
     census_dir = args.census_dir
+    geographic_dir = args.geographic_dir
     population_file = args.population_file
     
     # Determine population file path
@@ -268,7 +271,7 @@ def population_stats(args):
         print(f"Error: Population file not found: {population_file}")
         sys.exit(1)
     
-    constituencies_path = Path(census_dir) / 'constituencies'
+    constituencies_path = Path(geographic_dir) / 'constituencies'
     if not constituencies_path.exists():
         print(f"Error: Constituencies directory not found: {constituencies_path}")
         sys.exit(1)
@@ -278,7 +281,7 @@ def population_stats(args):
     population_data = load_population_data(population_file)
     
     print(f"Loading constituency definitions from: {constituencies_path}")
-    constituencies = load_all_constituencies(census_dir)
+    constituencies = load_all_constituencies(geographic_dir)
     
     # Assign sections to constituencies
     constituency_assignments = assign_sections_to_constituencies(population_data, constituencies)
@@ -325,6 +328,7 @@ def population_by_province(args):
     Show population by constituency grouped by province.
     """
     census_dir = args.census_dir
+    geographic_dir = args.geographic_dir
     population_file = args.population_file
     
     # Determine population file path
@@ -340,7 +344,7 @@ def population_by_province(args):
         print(f"Error: Population file not found: {population_file}")
         sys.exit(1)
     
-    constituencies_path = Path(census_dir) / 'constituencies'
+    constituencies_path = Path(geographic_dir) / 'constituencies'
     if not constituencies_path.exists():
         print(f"Error: Constituencies directory not found: {constituencies_path}")
         sys.exit(1)
@@ -350,7 +354,7 @@ def population_by_province(args):
     population_data = load_population_data(population_file)
     
     print(f"Loading constituency definitions from: {constituencies_path}")
-    constituencies = load_all_constituencies(census_dir)
+    constituencies = load_all_constituencies(geographic_dir)
     
     # Assign sections to constituencies
     constituency_assignments = assign_sections_to_constituencies(population_data, constituencies)
@@ -401,6 +405,11 @@ def main():
         help='Path to census directory (e.g., data/census/spain2011)'
     )
     check_parser.add_argument(
+        '--geographic-dir',
+        required=True,
+        help='Path to geographic directory (e.g., data/geographic/spain2011)'
+    )
+    check_parser.add_argument(
         '--population-file',
         help='Optional override for population CSV path'
     )
@@ -416,6 +425,11 @@ def main():
         help='Path to census directory (e.g., data/census/spain2011)'
     )
     stats_parser.add_argument(
+        '--geographic-dir',
+        required=True,
+        help='Path to geographic directory (e.g., data/geographic/spain2011)'
+    )
+    stats_parser.add_argument(
         '--population-file',
         help='Optional override for population CSV path'
     )
@@ -429,6 +443,11 @@ def main():
         '--census-dir',
         required=True,
         help='Path to census directory (e.g., data/census/spain2011)'
+    )
+    province_parser.add_argument(
+        '--geographic-dir',
+        required=True,
+        help='Path to geographic directory (e.g., data/geographic/spain2011)'
     )
     province_parser.add_argument(
         '--population-file',
