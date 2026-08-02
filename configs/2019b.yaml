@@ -1,9 +1,9 @@
 year: "2019b"
 votes_file: "data/raw/2019b/10021911.DAT"
 partidos_dir: "data/partidos/2019b"
+geographic_dir: "data/geographic/spain2011"
 output: "output/mapa2019b"
 method: "transfer"
 width: 1100
 height: 900
-skip_map: false
-no_map: false
+map: "png"

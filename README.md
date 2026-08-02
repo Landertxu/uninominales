@@ -50,13 +50,13 @@ python3 run.py \
   --year 2019a \
   --votes-file data/raw/2019a/10021904.DAT \
   --partidos-dir data/partidos/2019a \
+  --geographic-dir data/geographic/spain2011 \
   --output output/mapa2019a
 
-# Skip map rendering (generate shapefile only)
-python3 run.py --config configs/2015.yaml --skip-map
-
-# Don't generate shapefile (print results only)
-python3 run.py --config configs/2015.yaml --no-map
+# Control map generation
+python3 run.py --config configs/2015.yaml --map=none        # No map generation (simulation only)
+python3 run.py --config configs/2015.yaml --map=shapefile   # Generate shapefile only
+python3 run.py --config configs/2015.yaml --map=png         # Generate full map with PNG (default)
 
 # Just render the map from an existing shapefile (fast)
 python3 run.py --config configs/2015.yaml --viz-only
@@ -104,11 +104,13 @@ uninominales/
 │   └── 2019b.yaml            # November 2019 election
 ├── data/
 │   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
-│   ├── census/               # Census geography and derived constituency data
-│   │   └── spain2011/        # Spain 2011 census
+│   ├── geographic/           # Geographic data (shapefiles and holes)
+│   │   └── spain2011/        # Spain 2011 geographic data
 │   │       ├── geographic/   # Census-section shapefile
-│   │       ├── constituencies/ # Province constituency definitions
-│   │       └── holes/        # Hole-filler assignments for this census
+│   │       └── holes/        # Hole-filler assignments
+│   ├── census/               # Census data (constituencies)
+│   │   └── spain2011/        # Spain 2011 census
+│   │       └── constituencies/ # Province constituency definitions
 │   ├── partidos/             # Party YAML files
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008

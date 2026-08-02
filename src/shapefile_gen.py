@@ -17,7 +17,7 @@ from shapely import wkt
 from shapely.geometry import Polygon, MultiPolygon
 
 
-DEFAULT_HOLES_DIR = "data/census/spain2011/holes"
+DEFAULT_HOLES_DIR = "data/geographic/spain2011/holes"
 
 
 def load_holes(holes_dir=DEFAULT_HOLES_DIR):

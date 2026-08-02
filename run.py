@@ -26,8 +26,6 @@ from src.visualization import render_map
 OUTPUT_DIR = "output"
 DEFAULT_CONFIG = "configs/default.yaml"
 
-SHAPEFILE_BASENAME = "SECC_CPV_E_20111101_01_R_INE"
-
 
 def load_config(path):
     """Load a YAML config file. Returns an empty dict if the file is missing."""
@@ -50,16 +48,33 @@ def load_party_config(partidos_dir):
 def derive_census_paths(partidos_dir):
     """Derive census-related paths from the party config.
 
-    Returns (census_dir, map_template, circ_dir, holes_dir).
+    Returns (census_dir, circ_dir).
     """
     party_config = load_party_config(partidos_dir)
     census_dir = party_config.get("census_dir", "data/census/spain2011")
-
-    map_template = os.path.join(census_dir, "geographic", SHAPEFILE_BASENAME)
     circ_dir = os.path.join(census_dir, "constituencies")
-    holes_dir = os.path.join(census_dir, "holes")
+    return census_dir, circ_dir
 
-    return census_dir, map_template, circ_dir, holes_dir
+
+def derive_geographic_paths(geographic_dir):
+    """Derive geographic-related paths from the geographic directory.
+
+    Returns (map_template, holes_dir).
+    Auto-detects .shp file in {geographic_dir}/geographic/
+    """
+    geographic_subdir = os.path.join(geographic_dir, "geographic")
+    holes_dir = os.path.join(geographic_dir, "holes")
+
+    # Auto-detect .shp file
+    map_template = None
+    if os.path.isdir(geographic_subdir):
+        for fname in os.listdir(geographic_subdir):
+            if fname.endswith(".shp"):
+                # Remove .shp extension to get the template path
+                map_template = os.path.join(geographic_subdir, fname[:-4])
+                break
+
+    return map_template, holes_dir
 
 
 def build_args():
@@ -84,6 +99,10 @@ def build_args():
         help="Directory containing per-year party YAML files"
     )
     parser.add_argument(
+        "--geographic-dir", type=str,
+        help="Directory containing geographic data (shapefile and holes)"
+    )
+    parser.add_argument(
         "--circ-dir", type=str,
         help="Directory containing constituency definition files"
     )
@@ -100,12 +119,8 @@ def build_args():
         help="Output path prefix"
     )
     parser.add_argument(
-        "--skip-map", action="store_true",
-        help="Skip map rendering (generate shapefile only)"
-    )
-    parser.add_argument(
-        "--no-map", action="store_true",
-        help="Don't generate shapefile (print results only)"
+        "--map", choices=["none", "shapefile", "png"], default="png",
+        help="Map generation mode: none (no map), shapefile (shapefile only), png (full map with PNG)"
     )
     parser.add_argument(
         "--viz-only", action="store_true",
@@ -132,16 +147,19 @@ def build_args():
         config = load_config(config_path)
 
     # Simple CLI overrides: if a flag was given, use it.
-    for key in ["year", "votes_file", "partidos_dir", "circ_dir",
+    for key in ["year", "votes_file", "partidos_dir", "geographic_dir", "circ_dir",
                 "map_template", "holes_dir", "output", "method", "width", "height"]:
         value = getattr(cli_args, key)
         if value is not None:
             config[key] = value
 
+    # Handle --map flag
+    if cli_args.map != "png":  # png is the default
+        config["map"] = cli_args.map
+
     # Boolean flags: CLI overrides config.
-    for key in ["skip_map", "no_map", "viz_only"]:
-        if getattr(cli_args, key):
-            config[key] = True
+    if cli_args.viz_only:
+        config["viz_only"] = True
 
     return config
 
@@ -169,10 +187,33 @@ def main():
         return
 
     # Derive census-related paths from the party configuration.
-    _, default_map_template, default_circ_dir, default_holes_dir = derive_census_paths(partidos_dir)
+    _, default_circ_dir = derive_census_paths(partidos_dir)
+    circ_dir = config.get("circ_dir") or default_circ_dir
+
+    # Get map mode
+    map_mode = config.get("map", "png")
+
+    # Derive geographic paths if map generation is enabled
+    default_map_template = None
+    default_holes_dir = None
+    if map_mode != "none":
+        geographic_dir = config.get("geographic_dir")
+        if not geographic_dir:
+            print("Error: --geographic-dir is required when map generation is enabled (or set in config file).")
+            return
+
+        if not os.path.isdir(geographic_dir):
+            print(f"Error: geographic directory not found: {geographic_dir}")
+            return
+
+        default_map_template, default_holes_dir = derive_geographic_paths(geographic_dir)
+
+        # Validate that we found a shapefile
+        if not default_map_template:
+            print(f"Error: no .shp file found in {geographic_dir}/geographic/")
+            return
 
     map_template = config.get("map_template") or default_map_template
-    circ_dir = config.get("circ_dir") or default_circ_dir
     holes_dir = config.get("holes_dir") or default_holes_dir
 
     # Viz-only mode: just render from existing shapefile
@@ -213,7 +254,7 @@ def main():
         return
 
     # Step 2: Generate shapefile
-    if not config.get("no_map"):
+    if map_mode in ["shapefile", "png"]:
         print("\n" + "=" * 60)
         print("Step 2: Generating output shapefile")
         print("=" * 60)
@@ -229,7 +270,7 @@ def main():
         print(f"Shapefile saved to {output_prefix}.shp")
 
         # Step 3: Render map
-        if not config.get("skip_map"):
+        if map_mode == "png":
             print("\n" + "=" * 60)
             print("Step 3: Rendering election map")
             print("=" * 60)

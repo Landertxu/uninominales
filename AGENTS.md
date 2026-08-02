@@ -16,14 +16,15 @@ python3 run.py --config configs/2019a.yaml      # April 2019 election
 python3 run.py --config configs/2019b.yaml      # November 2019 election
 python3 run.py --method plurality               # Simple FPTP without vote transfers
 python3 run.py --viz-only                       # Re-render map from existing shapefile
-python3 run.py --skip-map                       # Generate shapefile but skip PNG
-python3 run.py --no-map                         # Print results only
+python3 run.py --map=shapefile                  # Generate shapefile but skip PNG
+python3 run.py --map=none                       # Print results only
 
 # Fully explicit invocation (no config file)
 python3 run.py \
   --year 2019a \
   --votes-file data/raw/2019a/10021904.DAT \
   --partidos-dir data/partidos/2019a \
+  --geographic-dir data/geographic/spain2011 \
   --output output/mapa2019a
 ```
 
@@ -57,9 +58,9 @@ pytest --regenerate-golden
 
 - `configs/*.yaml` — Per-year run configurations and default config
 - `data/raw/YYYY/*.DAT` — INE election data (large files, ~25 MB each)
-- `data/census/spain2011/geographic/` — Census-section shapefile
+- `data/geographic/spain2011/geographic/` — Census-section shapefile
+- `data/geographic/spain2011/holes/` — Hole-filler assignments for this census
 - `data/census/spain2011/constituencies/` — 52 province constituency definitions
-- `data/census/spain2011/holes/` — Hole-filler assignments for this census
 - `data/partidos/parties.yaml` — Central party metadata (names, colors)
 - `data/partidos/YYYY/config.yaml` — Per-year party configuration, references a census
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
@@ -89,7 +90,7 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 2. Create `data/partidos/YYYY/` with:
    - `config.yaml` referencing the census dataset (e.g. `census_dir: data/census/spain2011`)
    - per-region YAML files (`and.yaml`, `esp.yaml`, etc.)
-3. Create `configs/YYYY.yaml` pointing to the DAT file and party directory
+3. Create `configs/YYYY.yaml` pointing to the DAT file, party directory, and geographic directory
 4. Verify party codes against the INE candidatura file for that year
 5. Run `python3 run.py --config configs/YYYY.yaml` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
 
@@ -97,6 +98,7 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 
 - `run.py` does `os.chdir()` to its own directory — all paths are relative to project root
 - Province code = first 2 digits of mesa (census section) code
-- The template shapefile (`data/census/spain2011/geographic/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
+- The template shapefile (`data/geographic/spain2011/geographic/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
 - Party code mappings vary by region — a code in Madrid may not exist in Galicia
 - Transfer fractions should sum to ≤1.0 (unallocated fraction stays with the eliminated party as "lost")
+- `geographic_dir` is required when `map` is not `none`
