@@ -12,14 +12,13 @@ from src.constituency_parser import parse_constituency_file
 THRESHOLD = 5.0  # percent
 
 
-def get_votes_by_region(year):
+def get_votes_by_region(year, votes_file, circ_dir):
     """For each region, return {code: {constituency: pct}} for codes above 0."""
     region_map = load_region_map()
-    year_data = load_year_data(year)
+    year_data = load_year_data(votes_file)
     if not year_data:
         return {}
 
-    circ_dir = "data/circunscripciones"
     # region -> code -> {constituency_name: pct}
     region_code_pcts = defaultdict(lambda: defaultdict(dict))
 
@@ -45,9 +44,8 @@ def get_votes_by_region(year):
     return region_code_pcts
 
 
-def load_yaml_codes(year):
-    """Load all code->party mappings from YAML files for a year. Returns {region: {code: party}}."""
-    partidos_dir = f"data/partidos/{year}"
+def load_yaml_codes(partidos_dir):
+    """Load all code->party mappings from a party directory. Returns {region: {code: party}}."""
     if not os.path.exists(partidos_dir):
         return {}
 
@@ -62,10 +60,10 @@ def load_yaml_codes(year):
     return result
 
 
-def verify_year(year):
+def verify_year(year, votes_file, partidos_dir, circ_dir):
     """Check YAML codes against actual vote data for a year."""
-    region_data = get_votes_by_region(year)
-    yaml_codes = load_yaml_codes(year)
+    region_data = get_votes_by_region(year, votes_file, circ_dir)
+    yaml_codes = load_yaml_codes(partidos_dir)
 
     all_regions = set(region_data.keys()) | set(yaml_codes.keys())
     issues = []
@@ -104,6 +102,24 @@ def verify_year(year):
     return issues
 
 
+def load_year_config(year):
+    """Load the run configuration for a year."""
+    config_path = f"configs/{year}.yaml"
+    if not os.path.exists(config_path):
+        return None
+    with open(config_path) as f:
+        return yaml.safe_load(f)
+
+
+def load_party_config(partidos_dir):
+    """Load the per-year party configuration."""
+    config_path = os.path.join(partidos_dir, "config.yaml")
+    if not os.path.exists(config_path):
+        return {}
+    with open(config_path) as f:
+        return yaml.safe_load(f) or {}
+
+
 def main():
     years = sys.argv[1:] if len(sys.argv) > 1 else ["2008", "2011", "2015", "2016", "2019a", "2019b"]
     total_issues = 0
@@ -112,7 +128,20 @@ def main():
         print(f"\n{'='*60}")
         print(f"  {year}")
         print(f"{'='*60}")
-        issues = verify_year(year)
+
+        config = load_year_config(year)
+        if config is None:
+            print(f"  [ERROR] Config not found: configs/{year}.yaml")
+            continue
+
+        votes_file = config.get("votes_file")
+        partidos_dir = config.get("partidos_dir")
+
+        party_config = load_party_config(partidos_dir)
+        census_dir = party_config.get("census_dir", "data/census/spain2011")
+        circ_dir = os.path.join(census_dir, "constituencies")
+
+        issues = verify_year(year, votes_file, partidos_dir, circ_dir)
         if issues:
             for issue in issues:
                 print(issue)

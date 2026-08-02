@@ -1,8 +1,40 @@
 """Regression tests: exact seat counts by year."""
 
+import os
+from pathlib import Path
+
 import pytest
+import yaml
 
 from src.election_runner import run_simulation
+
+
+PROJECT_ROOT = Path(__file__).parent.parent
+
+
+def _run_simulation_for_year(year):
+    """Load the per-year config and run the simulation."""
+    config_path = PROJECT_ROOT / "configs" / f"{year}.yaml"
+    with open(config_path) as f:
+        config = yaml.safe_load(f)
+
+    partidos_dir = config["partidos_dir"]
+    party_config_path = PROJECT_ROOT / partidos_dir / "config.yaml"
+    if party_config_path.exists():
+        with open(party_config_path) as f:
+            party_config = yaml.safe_load(f)
+    else:
+        party_config = {}
+
+    census_dir = party_config.get("census_dir", "data/census/spain2011")
+    circ_dir = os.path.join(census_dir, "constituencies")
+
+    return run_simulation(
+        votes_file=config["votes_file"],
+        partidos_dir=partidos_dir,
+        circ_dir=circ_dir,
+        method=config.get("method", "transfer"),
+    )
 
 
 # Seat totals from the current implementation. Update these intentionally if
@@ -68,7 +100,7 @@ def test_seat_totals_match_expected(year):
     """Run the full simulation and compare seat totals to the baseline."""
     from collections import Counter
 
-    winners, _, _ = run_simulation(year)
+    winners, _, _ = _run_simulation_for_year(year)
     seats = Counter(winners.values())
 
     expected = EXPECTED_SEATS[year]
@@ -91,13 +123,13 @@ def test_seat_totals_match_expected(year):
 @pytest.mark.parametrize("year", ["2008", "2011", "2015", "2016", "2019a", "2019b"])
 def test_no_r_wins_seat(year):
     """R is a catch-all and should never win a constituency."""
-    winners, _, _ = run_simulation(year)
+    winners, _, _ = _run_simulation_for_year(year)
     assert "R" not in winners.values()
 
 
 @pytest.mark.parametrize("year", ["2008", "2011", "2015", "2016", "2019a", "2019b"])
 def test_all_constituencies_have_winner(year):
     """Every constituency should produce a winner."""
-    winners, _, _ = run_simulation(year)
+    winners, _, _ = _run_simulation_for_year(year)
     assert all(winner is not None and winner != "" for winner in winners.values())
     assert len(winners) == 350

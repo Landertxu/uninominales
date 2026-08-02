@@ -1,0 +1,9 @@
+year: "2011"
+votes_file: "data/raw/2011/10021111.DAT"
+partidos_dir: "data/partidos/2011"
+geographic_dir: "data/geographic/spain2011"
+output: "output/mapa2011"
+method: "transfer"
+width: 1100
+height: 900
+map: "png"

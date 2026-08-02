@@ -1,0 +1,9 @@
+year: "2015"
+votes_file: "data/raw/2015/10021215.DAT"
+partidos_dir: "data/partidos/2015"
+geographic_dir: "data/geographic/spain2015"
+output: "output/mapa2015"
+method: "transfer"
+width: 1100
+height: 900
+map: "png"

@@ -17,27 +17,32 @@ from shapely import wkt
 from shapely.geometry import Polygon, MultiPolygon
 
 
-HOLE_ASSIGNMENTS_PATH = "data/mapas/hole_assignments.yaml"
-HOLE_GEOMETRIES_PATH = "data/mapas/hole_geometries.wkt"
+DEFAULT_HOLES_DIR = "data/geographic/spain2011/holes"
 
 
-def load_holes():
+def load_holes(holes_dir=DEFAULT_HOLES_DIR):
     """Load hole assignments and geometries.
+
+    Args:
+        holes_dir: Directory containing hole_assignments.yaml and hole_geometries.wkt.
 
     Returns a list of (shapefile_shape, constituency_name) tuples.
     If either file is missing, returns an empty list.
     """
-    if not os.path.exists(HOLE_ASSIGNMENTS_PATH):
+    assignments_path = os.path.join(holes_dir, "hole_assignments.yaml")
+    geometries_path = os.path.join(holes_dir, "hole_geometries.wkt")
+
+    if not os.path.exists(assignments_path):
         return []
-    if not os.path.exists(HOLE_GEOMETRIES_PATH):
+    if not os.path.exists(geometries_path):
         return []
 
-    with open(HOLE_ASSIGNMENTS_PATH) as f:
+    with open(assignments_path) as f:
         data = yaml.safe_load(f)
     assignments = data.get("holes", {})
 
     holes = []
-    with open(HOLE_GEOMETRIES_PATH) as f:
+    with open(geometries_path) as f:
         for line in f:
             line = line.strip()
             if not line or "\t" not in line:
@@ -83,7 +88,8 @@ def _geometry_to_shape(geom):
     return shapefile.Shape(shapefile.POLYGON, points=points, parts=parts)
 
 
-def generate_shapefile(template_path, output_path, winners, valid, invalid):
+def generate_shapefile(template_path, output_path, winners, valid, invalid,
+                       holes_dir=DEFAULT_HOLES_DIR):
     """Generate an output shapefile with constituency and party columns.
 
     Args:
@@ -92,12 +98,19 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
         winners: dict mapping constituency_name -> winning party
         valid: dict mapping province_code -> {constituency_name -> (inclusion_codes)}
         invalid: dict mapping province_code -> {constituency_name -> (exclusion_codes)}
+        holes_dir: Directory containing hole-filler assignment files
     """
     sf = shapefile.Reader(template_path, encoding="latin-1")
     w = shapefile.Writer(output_path)
     w.fields = list(sf.fields)
     w.field("CIRC", "C", "40")
     w.field("PARTIDO", "C", "40")
+
+    # Find the CUSEC field index by name
+    # Note: sf.fields includes DeletionFlag at index 0, but records don't include it
+    # So we need to subtract 1 from the field index to get the record index
+    field_names = [field[0] for field in sf.fields]
+    cusec_idx = field_names.index("CUSEC") - 1
 
     i = 0
     unmatched = 0
@@ -107,7 +120,7 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
     # Used as a template for hole-filler polygon records.
     clean_base_rec = list(records[0])
     for shp, rec in zip(shapes, records):
-        code = rec[1]  # INE section code
+        code = rec[cusec_idx]  # INE section code
         codpr = code[:2]  # Province code
 
         circ = f"resto{i}"
@@ -129,7 +142,7 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid):
         w.record(*rec)
 
     # Append hole-filler polygons.
-    holes = load_holes()
+    holes = load_holes(holes_dir)
     if holes:
         for hole_shp, circ in holes:
             w.shape(hole_shp)

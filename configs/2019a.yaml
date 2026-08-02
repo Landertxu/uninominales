@@ -1,0 +1,9 @@
+year: "2019a"
+votes_file: "data/raw/2019a/10021904.DAT"
+partidos_dir: "data/partidos/2019a"
+geographic_dir: "data/geographic/spain2011"
+output: "output/mapa2019a"
+method: "transfer"
+width: 1100
+height: 900
+map: "png"

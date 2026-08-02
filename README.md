@@ -16,42 +16,57 @@ source env/bin/activate
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run complete workflow (parse data + simulate + generate map)
+# 3. Run complete workflow using the default config
 python3 run.py
 
-# Or specify a year
-python3 run.py --year 2015
+# Or use a per-year config
+python3 run.py --config configs/2019a.yaml
 ```
 
-### Available years
+### Available configs
 
-| Year | Flag | Notes |
-|------|------|-------|
-| 2008 | `--year 2008` | |
-| 2011 | `--year 2011` | |
-| 2015 | `--year 2015` | Default |
-| 2016 | `--year 2016` | |
-| 2019 (April) | `--year 2019a` | |
-| 2019 (November) | `--year 2019b` | |
+| Year | Config | Notes |
+|------|--------|-------|
+| 2008 | `--config configs/2008.yaml` | |
+| 2011 | `--config configs/2011.yaml` | |
+| 2015 | `--config configs/2015.yaml` | Default |
+| 2016 | `--config configs/2016.yaml` | |
+| 2019 (April) | `--config configs/2019a.yaml` | |
+| 2019 (November) | `--config configs/2019b.yaml` | |
 
 ### Workflow options
 
-```bash
-# Skip map rendering (generate shapefile only)
-python3 run.py --skip-map
+All options can be set in the config file or overridden on the command line.
 
-# Don't generate shapefile (print results only)
-python3 run.py --no-map
+```bash
+# Use a config file
+python3 run.py --config configs/2019a.yaml
+
+# Override specific values
+python3 run.py --config configs/2019a.yaml --method plurality
+
+# Provide everything explicitly (no config file)
+python3 run.py \
+  --year 2019a \
+  --votes-file data/raw/2019a/10021904.DAT \
+  --partidos-dir data/partidos/2019a \
+  --geographic-dir data/geographic/spain2011 \
+  --output output/mapa2019a
+
+# Control map generation
+python3 run.py --config configs/2015.yaml --map=none        # No map generation (simulation only)
+python3 run.py --config configs/2015.yaml --map=shapefile   # Generate shapefile only
+python3 run.py --config configs/2015.yaml --map=png         # Generate full map with PNG (default)
 
 # Just render the map from an existing shapefile (fast)
-python3 run.py --viz-only
+python3 run.py --config configs/2015.yaml --viz-only
 
 # Simulation method: 'transfer' (two-round with vote transfer) or
 # 'plurality' (simple FPTP, no transfers). Default: transfer
-python3 run.py --method plurality
+python3 run.py --config configs/2015.yaml --method plurality
 
 # Customize map dimensions
-python3 run.py --width 1200 --height 1000
+python3 run.py --config configs/2015.yaml --width 1200 --height 1000
 ```
 
 ## Downloading election data
@@ -79,9 +94,23 @@ uninominales/
 │       ├── canarias.py       # Canary Islands relocation
 │       ├── insets.py         # Madrid / Barcelona inset maps
 │       └── connections.py    # Island connection boxes
+├── configs/                  # Per-year run configuration files
+│   ├── default.yaml          # Default run configuration (2015)
+│   ├── 2008.yaml             # 2008 election
+│   ├── 2011.yaml             # 2011 election
+│   ├── 2015.yaml             # 2015 election
+│   ├── 2016.yaml             # 2016 election
+│   ├── 2019a.yaml            # April 2019 election
+│   └── 2019b.yaml            # November 2019 election
 ├── data/
 │   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
-│   ├── circunscripciones/    # 52 province constituency definitions
+│   ├── geographic/           # Geographic data (shapefiles and holes)
+│   │   └── spain2011/        # Spain 2011 geographic data
+│   │       ├── geographic/   # Census-section shapefile
+│   │       └── holes/        # Hole-filler assignments
+│   ├── census/               # Census data (constituencies)
+│   │   └── spain2011/        # Spain 2011 census
+│   │       └── constituencies/ # Province constituency definitions
 │   ├── partidos/             # Party YAML files
 │   │   ├── parties.yaml      # Central party names and colors
 │   │   ├── 2008/             # Per-region files for 2008
@@ -90,8 +119,7 @@ uninominales/
 │   │   ├── 2016/             # Per-region files for 2016
 │   │   ├── 2019a/            # Per-region files for April 2019
 │   │   └── 2019b/            # Per-region files for November 2019
-│   ├── regions.dat           # Province code → region name mapping
-│   └── mapas/molde/          # Template census-section shapefile
+│   └── regions.dat           # Province code → region name mapping
 ├── output/                   # Generated shapefiles and PNG maps
 ├── images/                   # README images
 ├── tests/                    # Test suite

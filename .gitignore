@@ -19,5 +19,15 @@ data/raw/
 # Template map shapefiles (large binary files, not tracked)
 data/mapas/molde/
 
+# Geographic shapefiles (large binary files)
+data/geographic/*/geographic/*.shp
+data/geographic/*/geographic/*.dbf
+data/geographic/*/geographic/*.shx
+data/geographic/*/geographic/*.sbn
+data/geographic/*/geographic/*.sbx
+
+# Raw census data
+data/census/*/raw/
+
 # Backup folder
 uninominales_v3_backup/
