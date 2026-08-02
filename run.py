@@ -140,11 +140,23 @@ def build_args():
     )
     cli_args = parser.parse_args()
 
-    # Start with defaults, then config file, then CLI overrides.
+    # Determine which config file to load
     config = {}
-    config_path = cli_args.config or DEFAULT_CONFIG
-    if config_path and os.path.exists(config_path):
-        config = load_config(config_path)
+    if cli_args.config:
+        # Explicit config file specified
+        config_path = cli_args.config
+        if os.path.exists(config_path):
+            config = load_config(config_path)
+    elif cli_args.year:
+        # Year specified, try to load year-specific config
+        config_path = f"configs/{cli_args.year}.yaml"
+        if os.path.exists(config_path):
+            config = load_config(config_path)
+    else:
+        # No year or config specified, use default
+        config_path = DEFAULT_CONFIG
+        if os.path.exists(config_path):
+            config = load_config(config_path)
 
     # Simple CLI overrides: if a flag was given, use it.
     for key in ["year", "votes_file", "partidos_dir", "geographic_dir", "circ_dir",

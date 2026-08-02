@@ -24,11 +24,15 @@ def group_by_circ(sf):
 
     Returns circ_data dict mapping circ -> {"shapes": [(shp, province)], "partido": str}
     """
+    # Find the CUSEC field index by name
+    field_names = [field[0] for field in sf.fields]
+    cusec_idx = field_names.index("CUSEC")
+    
     circ_data = defaultdict(lambda: {"shapes": [], "partido": "0"})
     for shp, rec in zip(sf.iterShapes(), sf.records()):
         circ = rec[-2]
         partido = rec[-1] if rec[-1] else "0"
-        province = rec[1][:2]
+        province = rec[cusec_idx][:2]
         circ_data[circ]["shapes"].append((shp, province))
         circ_data[circ]["partido"] = partido
     return circ_data

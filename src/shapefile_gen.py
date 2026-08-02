@@ -106,6 +106,12 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid,
     w.field("CIRC", "C", "40")
     w.field("PARTIDO", "C", "40")
 
+    # Find the CUSEC field index by name
+    # Note: sf.fields includes DeletionFlag at index 0, but records don't include it
+    # So we need to subtract 1 from the field index to get the record index
+    field_names = [field[0] for field in sf.fields]
+    cusec_idx = field_names.index("CUSEC") - 1
+
     i = 0
     unmatched = 0
     shapes = sf.shapes()
@@ -114,7 +120,7 @@ def generate_shapefile(template_path, output_path, winners, valid, invalid,
     # Used as a template for hole-filler polygon records.
     clean_base_rec = list(records[0])
     for shp, rec in zip(shapes, records):
-        code = rec[1]  # INE section code
+        code = rec[cusec_idx]  # INE section code
         codpr = code[:2]  # Province code
 
         circ = f"resto{i}"

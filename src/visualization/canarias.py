@@ -31,11 +31,17 @@ def split_mainland_canarias(sf):
 
     Returns (mainland_x, mainland_y, canarias_x, canarias_y) coordinate lists.
     """
+    # Find the CUSEC field index by name
+    # Note: sf.fields includes DeletionFlag at index 0, but records don't include it
+    # So we need to subtract 1 from the field index to get the record index
+    field_names = [field[0] for field in sf.fields]
+    cusec_idx = field_names.index("CUSEC") - 1
+
     mainland_x, mainland_y = [], []
     canarias_x, canarias_y = [], []
 
     for shp, rec in zip(sf.iterShapes(), sf.records()):
-        code = rec[1]
+        code = rec[cusec_idx]
         for x, y in shp.points:
             if code[:2] in CANARIAS_PROVS:
                 canarias_x.append(x)
