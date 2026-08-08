@@ -16,6 +16,7 @@ Usage:
 
 import argparse
 import os
+from pathlib import Path
 
 import yaml
 
@@ -23,6 +24,7 @@ from src.election_runner import run_simulation
 from src.shapefile_gen import generate_shapefile
 from src.visualization import render_map
 
+PROJECT_ROOT = Path(__file__).parent
 OUTPUT_DIR = "output"
 DEFAULT_CONFIG = "configs/default.yaml"
 
@@ -96,20 +98,19 @@ def build_args():
 def main():
     config = build_args()
 
-    # Change to script directory
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
     year = config.get("year")
     if not year:
         print("Error: --year is required (or set in config file).")
         return
 
     output_prefix = config.get("output") or os.path.join(OUTPUT_DIR, f"mapa{year}")
+    output_prefix = str(PROJECT_ROOT / output_prefix)
 
     partidos_dir = config.get("partidos_dir")
     if not partidos_dir:
         print("Error: --partidos-dir is required (or set in config file).")
         return
+    partidos_dir = str(PROJECT_ROOT / partidos_dir)
 
     if not os.path.isdir(partidos_dir):
         print(f"Error: partidos directory not found: {partidos_dir}")
@@ -123,6 +124,7 @@ def main():
     if not geographic_dir:
         print("Error: --geographic-dir is required (or set in config file).")
         return
+    geographic_dir = str(PROJECT_ROOT / geographic_dir)
 
     if not os.path.isdir(geographic_dir):
         print(f"Error: geographic directory not found: {geographic_dir}")
@@ -146,10 +148,12 @@ def main():
             print(f"Error: {shp_path} not found. Run full workflow first.")
             return
         img_path = f"{output_prefix}.png"
+        colors_dir = str(PROJECT_ROOT / "data/partidos/colors")
         render_map(
             shp_path,
             img_path,
             election=year,
+            colors_dir=colors_dir,
             width=config.get("width", 1100),
             height=config.get("height", 900),
         )
@@ -159,8 +163,11 @@ def main():
     if not votes_file:
         print("Error: --votes-file is required (or set in config file).")
         return
+    votes_file = str(PROJECT_ROOT / votes_file)
 
     method = config.get("method", "transfer")
+    regions_path = str(PROJECT_ROOT / "data/regions.dat")
+    colors_dir = str(PROJECT_ROOT / "data/partidos/colors")
 
     # Step 1: Run simulation
     print("=" * 60)
@@ -170,6 +177,7 @@ def main():
         votes_file=votes_file,
         partidos_dir=partidos_dir,
         circ_dir=circ_dir,
+        regions_path=regions_path,
         method=method,
     )
 
@@ -203,6 +211,7 @@ def main():
                 f"{output_prefix}.shp",
                 img_path,
                 election=year,
+                colors_dir=colors_dir,
                 width=config.get("width", 1100),
                 height=config.get("height", 900),
             )

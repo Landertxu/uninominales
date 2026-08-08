@@ -2,9 +2,9 @@
 
 Spanish election simulator (FPTP/uninominales) using INE DAT files. Python 3, no database — all data parsed in-memory.
 
-## Workflow
+## CRITICAL RULES
 
-- **Always ask before committing.** The user wants to review changes before they go into git.
+1. **NEVER commit or push without explicit user approval.** Always ask "Ready to commit?" or similar before running `git commit` or `git push`. The user wants to review changes first.
 
 ## Run commands
 
@@ -86,7 +86,6 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 
 ## Gotchas
 
-- `run.py` does `os.chdir()` to its own directory — all paths are relative to project root
 - Province code = first 2 digits of mesa (census section) code
 - The template shapefile (`data/geographic/spain2011/geographic/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
 - Party code mappings vary by region — a code in Madrid may not exist in Galicia

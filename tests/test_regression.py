@@ -21,11 +21,13 @@ def _run_simulation_for_year(year):
     partidos_dir = config["partidos_dir"]
     geographic_dir = config["geographic_dir"]
     circ_dir = os.path.join(geographic_dir, "constituencies")
+    regions_path = str(PROJECT_ROOT / "data/regions.dat")
 
     return run_simulation(
         votes_file=config["votes_file"],
         partidos_dir=partidos_dir,
         circ_dir=circ_dir,
+        regions_path=regions_path,
         method=config.get("method", "transfer"),
     )
 
