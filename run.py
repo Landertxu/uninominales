@@ -68,7 +68,7 @@ def derive_geographic_paths(geographic_dir):
 
 
 def build_args():
-    """Build the final configuration from defaults, config file, and CLI flags."""
+    """Build the final configuration from defaults and config file."""
     parser = argparse.ArgumentParser(
         description="Election simulator - FPTP system"
     )
@@ -80,90 +80,17 @@ def build_args():
         "--year", type=str,
         help="Election label, e.g. 2008, 2011, 2015, 2016, 2019a, 2019b"
     )
-    parser.add_argument(
-        "--votes-file", type=str,
-        help="Path to the INE type-10 DAT file"
-    )
-    parser.add_argument(
-        "--partidos-dir", type=str,
-        help="Directory containing per-year party YAML files"
-    )
-    parser.add_argument(
-        "--geographic-dir", type=str,
-        help="Directory containing geographic data (shapefile and holes)"
-    )
-    parser.add_argument(
-        "--circ-dir", type=str,
-        help="Directory containing constituency definition files"
-    )
-    parser.add_argument(
-        "--map-template", type=str,
-        help="Path prefix to the template shapefile"
-    )
-    parser.add_argument(
-        "--holes-dir", type=str,
-        help="Directory containing hole-filler assignment files"
-    )
-    parser.add_argument(
-        "--output", type=str,
-        help="Output path prefix"
-    )
-    parser.add_argument(
-        "--map", choices=["none", "shapefile", "png"], default="png",
-        help="Map generation mode: none (no map), shapefile (shapefile only), png (full map with PNG)"
-    )
-    parser.add_argument(
-        "--viz-only", action="store_true",
-        help="Just render the map from an existing shapefile"
-    )
-    parser.add_argument(
-        "--width", type=int,
-        help="Map image width"
-    )
-    parser.add_argument(
-        "--height", type=int,
-        help="Map image height"
-    )
-    parser.add_argument(
-        "--method", choices=["transfer", "plurality"],
-        help="Simulation method: transfer or plurality"
-    )
     cli_args = parser.parse_args()
 
     # Determine which config file to load
-    config = {}
     if cli_args.config:
-        # Explicit config file specified
         config_path = cli_args.config
-        if os.path.exists(config_path):
-            config = load_config(config_path)
     elif cli_args.year:
-        # Year specified, try to load year-specific config
         config_path = f"configs/{cli_args.year}.yaml"
-        if os.path.exists(config_path):
-            config = load_config(config_path)
     else:
-        # No year or config specified, use default
         config_path = DEFAULT_CONFIG
-        if os.path.exists(config_path):
-            config = load_config(config_path)
 
-    # Simple CLI overrides: if a flag was given, use it.
-    for key in ["year", "votes_file", "partidos_dir", "geographic_dir", "circ_dir",
-                "map_template", "holes_dir", "output", "method", "width", "height"]:
-        value = getattr(cli_args, key)
-        if value is not None:
-            config[key] = value
-
-    # Handle --map flag
-    if cli_args.map != "png":  # png is the default
-        config["map"] = cli_args.map
-
-    # Boolean flags: CLI overrides config.
-    if cli_args.viz_only:
-        config["viz_only"] = True
-
-    return config
+    return load_config(config_path)
 
 
 def main():

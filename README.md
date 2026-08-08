@@ -36,37 +36,14 @@ python3 run.py --config configs/2019a.yaml
 
 ### Workflow options
 
-All options can be set in the config file or overridden on the command line.
+All options are set in the config file.
 
 ```bash
 # Use a config file
 python3 run.py --config configs/2019a.yaml
 
-# Override specific values
-python3 run.py --config configs/2019a.yaml --method plurality
-
-# Provide everything explicitly (no config file)
-python3 run.py \
-  --year 2019a \
-  --votes-file data/raw/2019a/10021904.DAT \
-  --partidos-dir data/partidos/2019a \
-  --geographic-dir data/geographic/spain2011 \
-  --output output/mapa2019a
-
-# Control map generation
-python3 run.py --config configs/2015.yaml --map=none        # No map generation (simulation only)
-python3 run.py --config configs/2015.yaml --map=shapefile   # Generate shapefile only
-python3 run.py --config configs/2015.yaml --map=png         # Generate full map with PNG (default)
-
-# Just render the map from an existing shapefile (fast)
-python3 run.py --config configs/2015.yaml --viz-only
-
-# Simulation method: 'transfer' (two-round with vote transfer) or
-# 'plurality' (simple FPTP, no transfers). Default: transfer
-python3 run.py --config configs/2015.yaml --method plurality
-
-# Customize map dimensions
-python3 run.py --config configs/2015.yaml --width 1200 --height 1000
+# Or use --year shorthand (loads configs/{year}.yaml)
+python3 run.py --year 2019a
 ```
 
 ## Downloading election data
