@@ -25,20 +25,6 @@ def load_parties_metadata(path="data/partidos/parties.yaml"):
     return _PARTIES_CACHE
 
 
-def get_party_color(party_name, path="data/partidos/parties.yaml"):
-    """Get the hex color for a party."""
-    meta = load_parties_metadata(path)
-    if party_name in meta:
-        return meta[party_name].get("color", "#B4B4B4")
-    return "#B4B4B4"
-
-
-def get_all_party_colors(path="data/partidos/parties.yaml"):
-    """Get all party colors as a dict mapping party_name -> hex_color."""
-    meta = load_parties_metadata(path)
-    return {name: info.get("color", "#B4B4B4") for name, info in meta.items()}
-
-
 def read_party_file(path):
     """Read a per-election party file.
 
