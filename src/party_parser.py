@@ -1,28 +1,10 @@
 """Party data parser.
 
-Reads party configuration from YAML files:
-  - data/partidos/parties.yaml: Central party metadata (names, colors)
-  - data/partidos/{year}/{region}.yaml: Per-election party codes and transfers
+Reads per-election party configuration from YAML files:
+  - data/partidos/{year}/{region}.yaml: party codes and transfers
 """
 
 import yaml
-
-
-_PARTIES_CACHE = None
-
-
-def load_parties_metadata(path="data/partidos/parties.yaml"):
-    """Load central party metadata (names and colors).
-
-    Returns dict mapping party_name -> {"name": str, "color": str}.
-    """
-    global _PARTIES_CACHE
-    if _PARTIES_CACHE is not None:
-        return _PARTIES_CACHE
-
-    with open(path) as f:
-        _PARTIES_CACHE = yaml.safe_load(f)
-    return _PARTIES_CACHE
 
 
 def read_party_file(path):

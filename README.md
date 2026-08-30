@@ -89,7 +89,7 @@ uninominales/
 │   │   └── spain2011/        # Spain 2011 census
 │   │       └── constituencies/ # Province constituency definitions
 │   ├── partidos/             # Party YAML files
-│   │   ├── parties.yaml      # Central party names and colors
+│   │   ├── colors/           # Per-election party colors
 │   │   ├── 2008/             # Per-region files for 2008
 │   │   ├── 2011/             # Per-region files for 2011
 │   │   ├── 2015/             # Per-region files for 2015

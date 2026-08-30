@@ -1,6 +1,6 @@
 """Unit tests for the party YAML parser."""
 
-from src.party_parser import read_party_file, load_parties_metadata
+from src.party_parser import read_party_file
 
 
 def test_read_party_file_returns_codes_and_transfers(sample_party_yaml):
@@ -35,9 +35,3 @@ transfers:
         os.unlink(path)
 
 
-def test_load_parties_metadata_returns_parties(project_root):
-    parties = load_parties_metadata(path=project_root / "data/partidos/parties.yaml")
-    assert "PP" in parties
-    assert "PSOE" in parties
-    assert "name" in parties["PP"]
-    assert "color" in parties["PP"]

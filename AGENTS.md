@@ -50,7 +50,6 @@ pytest --regenerate-golden
 - `data/geographic/spainYYYY/geographic/` — Census-section shapefile
 - `data/geographic/spainYYYY/holes/` — Hole-filler assignments for this census
 - `data/geographic/spainYYYY/constituencies/` — 52 province constituency definitions
-- `data/partidos/parties.yaml` — Central party metadata (names, colors)
 - `data/partidos/colors/YYYY.yaml` — Per-election party colors
 - `data/partidos/YYYY/config.yaml` — Per-year party configuration, references a census
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
