@@ -10,11 +10,12 @@ def _hex_to_rgb(hex_color):
     return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
 
 
-def load_party_colors(election):
+def load_party_colors(election, colors_dir):
     """Load party colors for a specific election.
     
     Args:
         election: Election identifier (e.g., '2015', '2019a', '2019b')
+        colors_dir: Full path to the party colors directory
         
     Returns:
         dict mapping party code to RGB color tuple
@@ -22,7 +23,7 @@ def load_party_colors(election):
     Raises:
         FileNotFoundError: If colors file doesn't exist for this election
     """
-    path = os.path.join(os.path.dirname(__file__), "..", "..", "data", "partidos", "colors", f"{election}.yaml")
+    path = os.path.join(colors_dir, f"{election}.yaml")
     if not os.path.exists(path):
         raise FileNotFoundError(f"Party colors file not found: {path}")
     

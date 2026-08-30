@@ -118,13 +118,14 @@ def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
     return dict(votes)
 
 
-def run_simulation(votes_file, partidos_dir, circ_dir, method="transfer"):
+def run_simulation(votes_file, partidos_dir, circ_dir, regions_path, method="transfer"):
     """Run the FPTP simulation for a given dataset.
 
     Args:
         votes_file: Path to the INE type-10 DAT file
         partidos_dir: Directory containing per-year, per-region party YAML files
         circ_dir: Directory containing province constituency definitions
+        regions_path: Path to the regions.dat file mapping province codes to region names
         method: Simulation method - 'transfer' (two-round with vote transfer) or
                 'plurality' (simple FPTP, no transfers)
 
@@ -134,7 +135,7 @@ def run_simulation(votes_file, partidos_dir, circ_dir, method="transfer"):
     - invalid: dict mapping province_code -> {constituency_name -> (exclusion_codes)}
     """
     # Load province -> region mapping
-    region_map = load_region_map()
+    region_map = load_region_map(regions_path)
 
     # Load vote data from raw DAT file
     year_data = load_year_data(votes_file)

@@ -16,6 +16,8 @@ Usage:
 
 import argparse
 import os
+from dataclasses import dataclass
+from pathlib import Path
 
 import yaml
 
@@ -23,8 +25,24 @@ from src.election_runner import run_simulation
 from src.shapefile_gen import generate_shapefile
 from src.visualization import render_map
 
+PROJECT_ROOT = Path(__file__).parent
 OUTPUT_DIR = "output"
 DEFAULT_CONFIG = "configs/default.yaml"
+
+
+@dataclass
+class WorkflowPaths:
+    """Resolved paths for a workflow run."""
+
+    output_prefix: str
+    votes_file: str
+    partidos_dir: str
+    geographic_dir: str
+    map_template: str
+    holes_dir: str
+    circ_dir: str
+    regions_path: str
+    colors_dir: str
 
 
 def load_config(path):
@@ -68,7 +86,7 @@ def derive_geographic_paths(geographic_dir):
 
 
 def build_args():
-    """Build the final configuration from defaults, config file, and CLI flags."""
+    """Build the final configuration from defaults and config file."""
     parser = argparse.ArgumentParser(
         description="Election simulator - FPTP system"
     )
@@ -80,205 +98,164 @@ def build_args():
         "--year", type=str,
         help="Election label, e.g. 2008, 2011, 2015, 2016, 2019a, 2019b"
     )
-    parser.add_argument(
-        "--votes-file", type=str,
-        help="Path to the INE type-10 DAT file"
-    )
-    parser.add_argument(
-        "--partidos-dir", type=str,
-        help="Directory containing per-year party YAML files"
-    )
-    parser.add_argument(
-        "--geographic-dir", type=str,
-        help="Directory containing geographic data (shapefile and holes)"
-    )
-    parser.add_argument(
-        "--circ-dir", type=str,
-        help="Directory containing constituency definition files"
-    )
-    parser.add_argument(
-        "--map-template", type=str,
-        help="Path prefix to the template shapefile"
-    )
-    parser.add_argument(
-        "--holes-dir", type=str,
-        help="Directory containing hole-filler assignment files"
-    )
-    parser.add_argument(
-        "--output", type=str,
-        help="Output path prefix"
-    )
-    parser.add_argument(
-        "--map", choices=["none", "shapefile", "png"], default="png",
-        help="Map generation mode: none (no map), shapefile (shapefile only), png (full map with PNG)"
-    )
-    parser.add_argument(
-        "--viz-only", action="store_true",
-        help="Just render the map from an existing shapefile"
-    )
-    parser.add_argument(
-        "--width", type=int,
-        help="Map image width"
-    )
-    parser.add_argument(
-        "--height", type=int,
-        help="Map image height"
-    )
-    parser.add_argument(
-        "--method", choices=["transfer", "plurality"],
-        help="Simulation method: transfer or plurality"
-    )
     cli_args = parser.parse_args()
 
     # Determine which config file to load
-    config = {}
     if cli_args.config:
-        # Explicit config file specified
         config_path = cli_args.config
-        if os.path.exists(config_path):
-            config = load_config(config_path)
     elif cli_args.year:
-        # Year specified, try to load year-specific config
         config_path = f"configs/{cli_args.year}.yaml"
-        if os.path.exists(config_path):
-            config = load_config(config_path)
     else:
-        # No year or config specified, use default
         config_path = DEFAULT_CONFIG
-        if os.path.exists(config_path):
-            config = load_config(config_path)
 
-    # Simple CLI overrides: if a flag was given, use it.
-    for key in ["year", "votes_file", "partidos_dir", "geographic_dir", "circ_dir",
-                "map_template", "holes_dir", "output", "method", "width", "height"]:
-        value = getattr(cli_args, key)
-        if value is not None:
-            config[key] = value
+    return load_config(config_path)
 
-    # Handle --map flag
-    if cli_args.map != "png":  # png is the default
-        config["map"] = cli_args.map
 
-    # Boolean flags: CLI overrides config.
-    if cli_args.viz_only:
-        config["viz_only"] = True
+def resolve_paths(config):
+    """Resolve all paths relative to PROJECT_ROOT.
 
-    return config
+    Returns a WorkflowPaths object or raises SystemExit on missing required paths.
+    """
+    year = config["year"]
+
+    output_prefix = config.get("output") or os.path.join(OUTPUT_DIR, f"mapa{year}")
+    output_prefix = str(PROJECT_ROOT / output_prefix)
+
+    partidos_dir = config.get("partidos_dir")
+    if not partidos_dir:
+        print("Error: --partidos-dir is required (or set in config file).")
+        raise SystemExit(1)
+    partidos_dir = str(PROJECT_ROOT / partidos_dir)
+
+    geographic_dir = config.get("geographic_dir")
+    if not geographic_dir:
+        print("Error: --geographic-dir is required (or set in config file).")
+        raise SystemExit(1)
+    geographic_dir = str(PROJECT_ROOT / geographic_dir)
+
+    votes_file = config.get("votes_file")
+    if not votes_file:
+        print("Error: --votes-file is required (or set in config file).")
+        raise SystemExit(1)
+    votes_file = str(PROJECT_ROOT / votes_file)
+
+    map_template, holes_dir, circ_dir = derive_geographic_paths(geographic_dir)
+
+    return WorkflowPaths(
+        output_prefix=output_prefix,
+        votes_file=votes_file,
+        partidos_dir=partidos_dir,
+        geographic_dir=geographic_dir,
+        map_template=map_template,
+        holes_dir=holes_dir,
+        circ_dir=circ_dir,
+        regions_path=str(PROJECT_ROOT / "data/regions.dat"),
+        colors_dir=str(PROJECT_ROOT / "data/partidos/colors"),
+    )
+
+
+def validate_paths(paths):
+    """Check that required directories and shapefiles exist."""
+    if not os.path.isdir(paths.partidos_dir):
+        print(f"Error: partidos directory not found: {paths.partidos_dir}")
+        raise SystemExit(1)
+
+    if not os.path.isdir(paths.geographic_dir):
+        print(f"Error: geographic directory not found: {paths.geographic_dir}")
+        raise SystemExit(1)
+
+    if not paths.map_template:
+        print(f"Error: no .shp file found in {paths.geographic_dir}/geographic/")
+        raise SystemExit(1)
+
+
+def run_viz_only(paths, year, config):
+    """Render the map from an existing shapefile."""
+    shp_path = f"{paths.output_prefix}.shp"
+    if not os.path.exists(shp_path):
+        print(f"Error: {shp_path} not found. Run full workflow first.")
+        raise SystemExit(1)
+
+    img_path = f"{paths.output_prefix}.png"
+    render_map(
+        shp_path,
+        img_path,
+        election=year,
+        colors_dir=paths.colors_dir,
+        width=config.get("width", 1100),
+        height=config.get("height", 900),
+    )
+
+
+def run_simulation_step(paths, year, method):
+    """Run the election simulation."""
+    print("=" * 60)
+    print(f"Step 1: Running {method} simulation for {year}")
+    print("=" * 60)
+    return run_simulation(
+        votes_file=paths.votes_file,
+        partidos_dir=paths.partidos_dir,
+        circ_dir=paths.circ_dir,
+        regions_path=paths.regions_path,
+        method=method,
+    )
+
+
+def generate_output_files(paths, winners, valid, invalid, year, config):
+    """Generate output shapefile and PNG map."""
+    map_mode = config.get("map", "png")
+
+    if map_mode not in ("shapefile", "png"):
+        return
+
+    print("\n" + "=" * 60)
+    print("Step 2: Generating output shapefile")
+    print("=" * 60)
+    os.makedirs(os.path.dirname(paths.output_prefix) or OUTPUT_DIR, exist_ok=True)
+    generate_shapefile(
+        paths.map_template,
+        paths.output_prefix,
+        winners,
+        valid,
+        invalid,
+        holes_dir=paths.holes_dir,
+    )
+    print(f"Shapefile saved to {paths.output_prefix}.shp")
+
+    if map_mode == "png":
+        print("\n" + "=" * 60)
+        print("Step 3: Rendering election map")
+        print("=" * 60)
+        img_path = f"{paths.output_prefix}.png"
+        render_map(
+            f"{paths.output_prefix}.shp",
+            img_path,
+            election=year,
+            colors_dir=paths.colors_dir,
+            width=config.get("width", 1100),
+            height=config.get("height", 900),
+        )
 
 
 def main():
     config = build_args()
 
-    # Change to script directory
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
     year = config.get("year")
     if not year:
         print("Error: --year is required (or set in config file).")
-        return
+        raise SystemExit(1)
 
-    output_prefix = config.get("output") or os.path.join(OUTPUT_DIR, f"mapa{year}")
+    paths = resolve_paths(config)
+    validate_paths(paths)
 
-    partidos_dir = config.get("partidos_dir")
-    if not partidos_dir:
-        print("Error: --partidos-dir is required (or set in config file).")
-        return
-
-    if not os.path.isdir(partidos_dir):
-        print(f"Error: partidos directory not found: {partidos_dir}")
-        return
-
-    # Get map mode
-    map_mode = config.get("map", "png")
-
-    # Derive geographic paths
-    geographic_dir = config.get("geographic_dir")
-    if not geographic_dir:
-        print("Error: --geographic-dir is required (or set in config file).")
-        return
-
-    if not os.path.isdir(geographic_dir):
-        print(f"Error: geographic directory not found: {geographic_dir}")
-        return
-
-    default_map_template, default_holes_dir, default_circ_dir = derive_geographic_paths(geographic_dir)
-
-    # Validate that we found a shapefile
-    if not default_map_template:
-        print(f"Error: no .shp file found in {geographic_dir}/geographic/")
-        return
-
-    map_template = config.get("map_template") or default_map_template
-    holes_dir = config.get("holes_dir") or default_holes_dir
-    circ_dir = config.get("circ_dir") or default_circ_dir
-
-    # Viz-only mode: just render from existing shapefile
     if config.get("viz_only"):
-        shp_path = f"{output_prefix}.shp"
-        if not os.path.exists(shp_path):
-            print(f"Error: {shp_path} not found. Run full workflow first.")
+        run_viz_only(paths, year, config)
+    else:
+        winners, valid, invalid = run_simulation_step(paths, year, config.get("method", "transfer"))
+        if not winners:
+            print("No results to process")
             return
-        img_path = f"{output_prefix}.png"
-        render_map(
-            shp_path,
-            img_path,
-            election=year,
-            width=config.get("width", 1100),
-            height=config.get("height", 900),
-        )
-        return
-
-    votes_file = config.get("votes_file")
-    if not votes_file:
-        print("Error: --votes-file is required (or set in config file).")
-        return
-
-    method = config.get("method", "transfer")
-
-    # Step 1: Run simulation
-    print("=" * 60)
-    print(f"Step 1: Running {method} simulation for {year}")
-    print("=" * 60)
-    winners, valid, invalid = run_simulation(
-        votes_file=votes_file,
-        partidos_dir=partidos_dir,
-        circ_dir=circ_dir,
-        method=method,
-    )
-
-    if not winners:
-        print("No results to process")
-        return
-
-    # Step 2: Generate shapefile
-    if map_mode in ["shapefile", "png"]:
-        print("\n" + "=" * 60)
-        print("Step 2: Generating output shapefile")
-        print("=" * 60)
-        os.makedirs(os.path.dirname(output_prefix) or OUTPUT_DIR, exist_ok=True)
-        generate_shapefile(
-            map_template,
-            output_prefix,
-            winners,
-            valid,
-            invalid,
-            holes_dir=holes_dir,
-        )
-        print(f"Shapefile saved to {output_prefix}.shp")
-
-        # Step 3: Render map
-        if map_mode == "png":
-            print("\n" + "=" * 60)
-            print("Step 3: Rendering election map")
-            print("=" * 60)
-            img_path = f"{output_prefix}.png"
-            render_map(
-                f"{output_prefix}.shp",
-                img_path,
-                election=year,
-                width=config.get("width", 1100),
-                height=config.get("height", 900),
-            )
+        generate_output_files(paths, winners, valid, invalid, year, config)
 
     print("\n" + "=" * 60)
     print("Done!")

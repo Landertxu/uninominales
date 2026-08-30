@@ -2,9 +2,9 @@
 
 Spanish election simulator (FPTP/uninominales) using INE DAT files. Python 3, no database — all data parsed in-memory.
 
-## Workflow
+## CRITICAL RULES
 
-- **Always ask before committing.** The user wants to review changes before they go into git.
+1. **NEVER commit or push without explicit user approval.** Always ask "Ready to commit?" or similar before running `git commit` or `git push`. The user wants to review changes first.
 
 ## Run commands
 
@@ -14,18 +14,7 @@ python3 run.py                                  # Default: configs/default.yaml 
 python3 run.py --config configs/2016.yaml       # Use a per-year config
 python3 run.py --config configs/2019a.yaml      # April 2019 election
 python3 run.py --config configs/2019b.yaml      # November 2019 election
-python3 run.py --method plurality               # Simple FPTP without vote transfers
-python3 run.py --viz-only                       # Re-render map from existing shapefile
-python3 run.py --map=shapefile                  # Generate shapefile but skip PNG
-python3 run.py --map=none                       # Print results only
-
-# Fully explicit invocation (no config file)
-python3 run.py \
-  --year 2019a \
-  --votes-file data/raw/2019a/10021904.DAT \
-  --partidos-dir data/partidos/2019a \
-  --geographic-dir data/geographic/spain2011 \
-  --output output/mapa2019a
+python3 run.py --year 2019a                     # Shorthand (loads configs/2019a.yaml)
 ```
 
 **Important:** `--year` is a string. 2019 has two elections: `2019a` (April) and `2019b` (November). Single-election years: `2008`, `2011`, `2015`, `2016`.
@@ -58,10 +47,10 @@ pytest --regenerate-golden
 
 - `configs/*.yaml` — Per-year run configurations and default config
 - `data/raw/YYYY/*.DAT` — INE election data (large files, ~25 MB each)
-- `data/geographic/spain2011/geographic/` — Census-section shapefile
-- `data/geographic/spain2011/holes/` — Hole-filler assignments for this census
-- `data/census/spain2011/constituencies/` — 52 province constituency definitions
-- `data/partidos/parties.yaml` — Central party metadata (names, colors)
+- `data/geographic/spainYYYY/geographic/` — Census-section shapefile
+- `data/geographic/spainYYYY/holes/` — Hole-filler assignments for this census
+- `data/geographic/spainYYYY/constituencies/` — 52 province constituency definitions
+- `data/partidos/colors/YYYY.yaml` — Per-election party colors
 - `data/partidos/YYYY/config.yaml` — Per-year party configuration, references a census
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
 - `data/regions.dat` — Province code → region name mapping
@@ -96,7 +85,6 @@ The `R` (resto) party is **always eliminated** and redistributed. The original a
 
 ## Gotchas
 
-- `run.py` does `os.chdir()` to its own directory — all paths are relative to project root
 - Province code = first 2 digits of mesa (census section) code
 - The template shapefile (`data/geographic/spain2011/geographic/SECC_CPV_E_20111101_01_R_INE`) has `.prj` copied to output by shapefile_gen.py
 - Party code mappings vary by region — a code in Madrid may not exist in Galicia
