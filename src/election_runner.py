@@ -47,6 +47,40 @@ def load_region_map(regions_path="data/regions.dat"):
     return mapping
 
 
+def _list_constituency_files(circ_dir):
+    """List constituency definition files in a directory.
+
+    Returns dict mapping province_code -> filepath.
+    """
+    files = {}
+    if not os.path.isdir(circ_dir):
+        return files
+
+    for filename in sorted(os.listdir(circ_dir)):
+        if not filename.startswith("circ") or not filename.endswith(".dat"):
+            continue
+
+        ncirc = filename.replace("circ", "").replace(".dat", "")
+        province_code = ncirc[:2] if len(ncirc) >= 2 else ""
+        if not province_code:
+            continue
+
+        files[province_code] = os.path.join(circ_dir, filename)
+
+    return files
+
+
+def merge_constituency_files(base_circ_dir, delta_circ_dir):
+    """Merge base constituency files with election-specific deltas.
+
+    Returns dict mapping province_code -> filepath. Delta files override base files.
+    """
+    files = _list_constituency_files(base_circ_dir)
+    delta_files = _list_constituency_files(delta_circ_dir)
+    files.update(delta_files)
+    return files
+
+
 def find_party_file(region_name, year_dir):
     """Find the party file for a region under a given per-year party directory.
 
@@ -118,13 +152,14 @@ def get_votes_for_constituency(year_data, inclusion_codes, exclusion_codes):
     return dict(votes)
 
 
-def run_simulation(votes_file, partidos_dir, circ_dir, regions_path, method="transfer"):
+def run_simulation(votes_file, partidos_dir, base_circ_dir, delta_circ_dir, regions_path, method="transfer"):
     """Run the FPTP simulation for a given dataset.
 
     Args:
         votes_file: Path to the INE type-10 DAT file
         partidos_dir: Directory containing per-year, per-region party YAML files
-        circ_dir: Directory containing province constituency definitions
+        base_circ_dir: Directory containing base province constituency definitions
+        delta_circ_dir: Directory containing election-specific constituency overrides
         regions_path: Path to the regions.dat file mapping province codes to region names
         method: Simulation method - 'transfer' (two-round with vote transfer) or
                 'plurality' (simple FPTP, no transfers)
@@ -146,22 +181,13 @@ def run_simulation(votes_file, partidos_dir, circ_dir, regions_path, method="tra
     # Get available provinces from loaded data
     available_provinces = set(mesa[:2] for mesa in year_data.raw)
 
+    # Merge base constituency files with election-specific deltas
+    province_files = merge_constituency_files(base_circ_dir, delta_circ_dir)
+
     # Group province files by region (so each party file is loaded once)
     region_provinces = collections.defaultdict(list)  # region_name -> [province_code, ...]
-    province_files = {}  # province_code -> filepath
 
-    for filename in sorted(os.listdir(circ_dir)):
-        if not filename.startswith("circ") or not filename.endswith(".dat"):
-            continue
-
-        ncirc = filename.replace("circ", "").replace(".dat", "")
-        province_code = ncirc[:2] if len(ncirc) >= 2 else ""
-        if not province_code:
-            continue
-
-        filepath = os.path.join(circ_dir, filename)
-        province_files[province_code] = filepath
-
+    for province_code, filepath in province_files.items():
         region_name = region_map.get(province_code, "esp")
         region_provinces[region_name].append(province_code)
 

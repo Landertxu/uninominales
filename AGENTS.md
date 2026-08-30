@@ -49,11 +49,25 @@ pytest --regenerate-golden
 - `data/raw/YYYY/*.DAT` — INE election data (large files, ~25 MB each)
 - `data/geographic/spainYYYY/geographic/` — Census-section shapefile
 - `data/geographic/spainYYYY/holes/` — Hole-filler assignments for this census
-- `data/geographic/spainYYYY/constituencies/` — 52 province constituency definitions
+- `data/geographic/spainYYYY/constituencies/` — Base province constituency definitions (for census years)
+- `data/geographic/spainYYYY/deltas/` — Constituency override files vs the base census year
 - `data/partidos/colors/YYYY.yaml` — Per-election party colors
 - `data/partidos/YYYY/config.yaml` — Per-year party configuration, references a census
 - `data/partidos/YYYY/{region}.yaml` — Per-year, per-region party codes and transfer rules
 - `data/regions.dat` — Province code → region name mapping
+
+## Adding a new election year
+
+1. Place the INE DAT file in `data/raw/YYYY/`
+2. Create `data/partidos/YYYY/` with:
+   - `config.yaml` referencing the census dataset (e.g. `census_dir: data/census/spain2011`)
+   - per-region YAML files (`and.yaml`, `esp.yaml`, etc.)
+3. Create `configs/YYYY.yaml` pointing to:
+   - the DAT file and party directory
+   - the election-specific `geographic_dir`
+   - the `base_constituencies_dir` (usually a census year like `data/geographic/spain2011/constituencies`)
+4. If the election's constituency boundaries differ from the base, add override files in `data/geographic/{geographic_dir}/deltas/`
+5. Run `python3 run.py --config configs/YYYY.yaml` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
 
 ## Party YAML format
 
@@ -72,16 +86,6 @@ Codes are 2-3 digit integers from the INE data. Party codes vary by region and y
 ## R-handling divergence from original
 
 The `R` (resto) party is **always eliminated** and redistributed. The original algorithm could protect R from elimination if it earned ≥20% of a district's votes. This v3 change is intentional — R is an artificial catch-all for minor/unknown candidaturas and should never win a seat. On historical data (2008–2016) this never triggers. For 2019, it flips one seat: **Navarra4** (April 2019).
-
-## Adding a new election year
-
-1. Place the INE DAT file in `data/raw/YYYY/`
-2. Create `data/partidos/YYYY/` with:
-   - `config.yaml` referencing the census dataset (e.g. `census_dir: data/census/spain2011`)
-   - per-region YAML files (`and.yaml`, `esp.yaml`, etc.)
-3. Create `configs/YYYY.yaml` pointing to the DAT file, party directory, and geographic directory
-4. Verify party codes against the INE candidatura file for that year
-5. Run `python3 run.py --config configs/YYYY.yaml` and check for `[WARN] R=XX%` lines (>5% R is suspicious)
 
 ## Gotchas
 

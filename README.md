@@ -81,13 +81,15 @@ uninominales/
 │   └── 2019b.yaml            # November 2019 election
 ├── data/
 │   ├── raw/                  # INE election DAT files (untracked, ~25 MB each)
-│   ├── geographic/           # Geographic data (shapefiles and holes)
-│   │   └── spain2011/        # Spain 2011 geographic data
+│   ├── geographic/           # Geographic data (shapefiles, holes, constituencies)
+│   │   ├── spain2011/        # Spain 2011 base geographic data
+│   │   │   ├── geographic/   # Census-section shapefile
+│   │   │   ├── holes/        # Hole-filler assignments
+│   │   │   └── constituencies/ # Base province constituency definitions
+│   │   └── spain2015/        # Spain 2015 geographic data
 │   │       ├── geographic/   # Census-section shapefile
-│   │       └── holes/        # Hole-filler assignments
-│   ├── census/               # Census data (constituencies)
-│   │   └── spain2011/        # Spain 2011 census
-│   │       └── constituencies/ # Province constituency definitions
+│   │       ├── holes/        # Hole-filler assignments
+│   │       └── deltas/       # Constituency overrides vs spain2011 base
 │   ├── partidos/             # Party YAML files
 │   │   ├── colors/           # Per-election party colors
 │   │   ├── 2008/             # Per-region files for 2008

@@ -19,14 +19,15 @@ def _run_simulation_for_year(year):
         config = yaml.safe_load(f)
 
     partidos_dir = config["partidos_dir"]
-    geographic_dir = config["geographic_dir"]
-    circ_dir = os.path.join(geographic_dir, "constituencies")
+    base_circ_dir = config["base_constituencies_dir"]
+    delta_circ_dir = os.path.join(config["geographic_dir"], "deltas")
     regions_path = str(PROJECT_ROOT / "data/regions.dat")
 
     return run_simulation(
         votes_file=config["votes_file"],
         partidos_dir=partidos_dir,
-        circ_dir=circ_dir,
+        base_circ_dir=base_circ_dir,
+        delta_circ_dir=delta_circ_dir,
         regions_path=regions_path,
         method=config.get("method", "transfer"),
     )

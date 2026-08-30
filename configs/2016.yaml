@@ -2,6 +2,7 @@ year: "2016"
 votes_file: "data/raw/2016/10021606.DAT"
 partidos_dir: "data/partidos/2016"
 geographic_dir: "data/geographic/spain2011"
+base_constituencies_dir: "data/geographic/spain2011/constituencies"
 output: "output/mapa2016"
 method: "transfer"
 width: 1100

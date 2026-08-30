@@ -2,6 +2,7 @@ year: "2019a"
 votes_file: "data/raw/2019a/10021904.DAT"
 partidos_dir: "data/partidos/2019a"
 geographic_dir: "data/geographic/spain2011"
+base_constituencies_dir: "data/geographic/spain2011/constituencies"
 output: "output/mapa2019a"
 method: "transfer"
 width: 1100

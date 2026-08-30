@@ -40,7 +40,8 @@ class WorkflowPaths:
     geographic_dir: str
     map_template: str
     holes_dir: str
-    circ_dir: str
+    base_circ_dir: str
+    delta_circ_dir: str
     regions_path: str
     colors_dir: str
 
@@ -66,12 +67,12 @@ def load_party_config(partidos_dir):
 def derive_geographic_paths(geographic_dir):
     """Derive geographic-related paths from the geographic directory.
 
-    Returns (map_template, holes_dir, circ_dir).
+    Returns (map_template, holes_dir, delta_circ_dir).
     Auto-detects .shp file in {geographic_dir}/geographic/
     """
     geographic_subdir = os.path.join(geographic_dir, "geographic")
     holes_dir = os.path.join(geographic_dir, "holes")
-    circ_dir = os.path.join(geographic_dir, "constituencies")
+    delta_circ_dir = os.path.join(geographic_dir, "deltas")
 
     # Auto-detect .shp file
     map_template = None
@@ -82,7 +83,7 @@ def derive_geographic_paths(geographic_dir):
                 map_template = os.path.join(geographic_subdir, fname[:-4])
                 break
 
-    return map_template, holes_dir, circ_dir
+    return map_template, holes_dir, delta_circ_dir
 
 
 def build_args():
@@ -139,7 +140,13 @@ def resolve_paths(config):
         raise SystemExit(1)
     votes_file = str(PROJECT_ROOT / votes_file)
 
-    map_template, holes_dir, circ_dir = derive_geographic_paths(geographic_dir)
+    base_circ_dir = config.get("base_constituencies_dir")
+    if not base_circ_dir:
+        print("Error: base_constituencies_dir is required (or set in config file).")
+        raise SystemExit(1)
+    base_circ_dir = str(PROJECT_ROOT / base_circ_dir)
+
+    map_template, holes_dir, delta_circ_dir = derive_geographic_paths(geographic_dir)
 
     return WorkflowPaths(
         output_prefix=output_prefix,
@@ -148,7 +155,8 @@ def resolve_paths(config):
         geographic_dir=geographic_dir,
         map_template=map_template,
         holes_dir=holes_dir,
-        circ_dir=circ_dir,
+        base_circ_dir=base_circ_dir,
+        delta_circ_dir=delta_circ_dir,
         regions_path=str(PROJECT_ROOT / "data/regions.dat"),
         colors_dir=str(PROJECT_ROOT / "data/partidos/colors"),
     )
@@ -162,6 +170,10 @@ def validate_paths(paths):
 
     if not os.path.isdir(paths.geographic_dir):
         print(f"Error: geographic directory not found: {paths.geographic_dir}")
+        raise SystemExit(1)
+
+    if not os.path.isdir(paths.base_circ_dir):
+        print(f"Error: base constituencies directory not found: {paths.base_circ_dir}")
         raise SystemExit(1)
 
     if not paths.map_template:
@@ -195,7 +207,8 @@ def run_simulation_step(paths, year, method):
     return run_simulation(
         votes_file=paths.votes_file,
         partidos_dir=paths.partidos_dir,
-        circ_dir=paths.circ_dir,
+        base_circ_dir=paths.base_circ_dir,
+        delta_circ_dir=paths.delta_circ_dir,
         regions_path=paths.regions_path,
         method=method,
     )
